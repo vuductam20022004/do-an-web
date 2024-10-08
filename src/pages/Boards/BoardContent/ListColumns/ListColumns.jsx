@@ -30,14 +30,7 @@ function ListColumns({ columns }) {
         pl: 2.5,
         py: 0.5
       }}>
-        <Button
-          startIcon ={ <NoteAddIcon />}
-          sx={{
-            color: 'white'
-          }}
 
-        >Add new column
-        </Button>
       </Box>
     </Box>
   )
