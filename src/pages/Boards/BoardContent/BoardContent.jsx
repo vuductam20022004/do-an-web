@@ -2,7 +2,9 @@ import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOrder } from '~/utils/sorts'
 
-import Sidebar from './SideBars/SideBar'
+// import Sidebar from './SideBars/SideBar'
+import RecipeGrid from './grid_test'
+import SideBar from './SideBars/SideBar'
 
 
 function BoardContent({ board }) {
@@ -19,17 +21,19 @@ function BoardContent({ board }) {
         width:'15% ',
         p: '10px 0'
       }}>
-        <Sidebar />
+        <SideBar />
       </Box>
 
       <Box sx={{
         bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
         height:(theme) => theme.trello.boardContentHeight,
         width:'85% ',
-        p: '10px 0'
+        p: '10px 15px',
+        overflow: 'auto'
       }}>
         {/* bọc 2 hoặc nhiều column */}
-        <ListColumns columns = {orderedColumns} />
+        {/* <ListColumns columns = {orderedColumns} /> */}
+        <RecipeGrid />
       </Box>
     </Box>
   )

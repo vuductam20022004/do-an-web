@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState} from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
@@ -22,6 +22,9 @@ import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 
 
+import ResponsiveAppBar from './Menu/Menu'
+
+
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
   return (
@@ -43,11 +46,7 @@ function AppBar() {
           <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'white' }}>Trello</Typography>
         </Box>
         <Box sx={{ display:{ xs: 'none', md:'flex' }, gap: 1 }}>
-          <Workspaces />
-          <Recent />
-          <Started />
-          <Templates />
-          <Button variant="outlined" startIcon={<LibraryAddIcon/>} sx={{ color: 'white'}} >Create</Button>
+          <ResponsiveAppBar />
         </Box>
 
 

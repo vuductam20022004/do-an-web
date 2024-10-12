@@ -14,6 +14,7 @@ function ListColumns({ columns }) {
       display:'flex',
       overflowX: 'auto',
       overflowY: 'hidden',
+
       '&::-webkit-scrollbar-track':{ m: 2 }
     }}>
       {columns.map(column => <Column key={column._id} column = {column}/> )}
