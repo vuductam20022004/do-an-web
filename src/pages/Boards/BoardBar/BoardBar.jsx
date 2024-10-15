@@ -125,7 +125,6 @@ function BoardBar({ board }) {
 
       </Box>
 
-
     </Box>)
 }
 

@@ -1,14 +1,10 @@
-import { useState} from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
 import { ReactComponent as trelloIcon } from '~/assets/trello.svg'
 import SvgIcon from '@mui/material/SvgIcon'
 import Typography from '@mui/material/Typography'
-import Workspaces from './Menu/Workspaces'
-import Recent from './Menu/Recent'
-import Started from './Menu/Started'
-import Templates from './Menu/Templates'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -16,16 +12,16 @@ import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menu/Profiles'
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 
 
 import ResponsiveAppBar from './Menu/Menu'
-
+import AddIcon from '@mui/icons-material/Add'
 
 function AppBar() {
+
   const [searchValue, setSearchValue] = useState('')
   return (
     <Box sx={{
@@ -43,7 +39,7 @@ function AppBar() {
         <AppsIcon sx={{ color:'white' }}/>
         <Box sx={{ display:'flex', alignItems:'center', gap:0.5 }}>
           <SvgIcon component={trelloIcon} fontSize ="small" inheritViewBox sx={{ color:'white' }}/>
-          <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'white' }}>Trello</Typography>
+          <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'white' }}>Bếp</Typography>
         </Box>
         <Box sx={{ display:{ xs: 'none', md:'flex' }, gap: 1 }}>
           <ResponsiveAppBar />
@@ -51,7 +47,9 @@ function AppBar() {
 
 
       </Box>
+      {/* box right */}
       <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
+        <Button sx={{ border:'1px solid' }} variant="contained" startIcon = {<AddIcon/>} >Viết món mới</Button>
         <TextField id="outlined-basic"
           label="Search....."
           type="text"
@@ -61,7 +59,7 @@ function AppBar() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{color: 'white' }}/>
+                <SearchIcon sx={{ color: 'white' }}/>
               </InputAdornment>
             ),
             endAdornment: (

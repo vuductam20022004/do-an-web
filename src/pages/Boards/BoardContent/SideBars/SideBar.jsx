@@ -1,13 +1,5 @@
-import { List, ListItem, ListItemIcon, ListItemText, Avatar, Typography } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText, Avatar, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import BookmarkIcon from '@mui/icons-material/Bookmark'
-import BarChartIcon from '@mui/icons-material/BarChart'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks'
-
-
-
-
 
 
 import TextField from '@mui/material/TextField'
@@ -18,6 +10,8 @@ import SaveIcon from '@mui/icons-material/Save'
 import HomeIcon from '@mui/icons-material/Home'
 import AddIcon from '@mui/icons-material/Add'
 import PersonIcon from '@mui/icons-material/Person'
+import { useNavigate } from 'react-router-dom'
+//  import {} from '~/pages/Boards/BoardContent/add-new-mon/them_mon_moi'
 
 
 // Biểu tượng và tên thương hiệu ở trên cùng
@@ -27,12 +21,19 @@ const BrandLogo = () => {
       <ListItemIcon>
         <Avatar src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Logo" />
       </ListItemIcon>
-      <Typography variant="h6" color="primary">Cookpad</Typography>
+      <Typography variant="h6" color="primary">Tên Bếp</Typography>
     </ListItem>
   )
 }
 
 const SideBar = () => {
+
+  const navigate = useNavigate()
+
+  const handleClickThemMonMoi = () => {
+    console.log('ok')
+    navigate('/add-new-mon/them_mon_moi')
+  }
 
   const [searchValue, setSearchValue] = useState('')
 
@@ -61,7 +62,7 @@ const SideBar = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{color: 'white' }}/>
+                <SearchIcon sx={{ color: 'white' }}/>
               </InputAdornment>
             ),
             endAdornment: (
@@ -89,14 +90,14 @@ const SideBar = () => {
           }}>
         </TextField>
       </ListItem>
-
-      <ListItem button>
+      
+      <ListItem button onClick={handleClickThemMonMoi}>
         <ListItemIcon>
           <AddIcon />
         </ListItemIcon>
-        <ListItemText primary="Thêm Món Mới" />
+        <ListItemText primary="Thêm món mới"/>
       </ListItem>
-      
+
       <ListItem button>
         <ListItemIcon>
           <SaveIcon />

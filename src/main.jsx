@@ -5,7 +5,8 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 
 import theme from './theme'
-import { BrowserRouter } from 'react-router-dom';
+
+// import AppRoutes from './pages/Routing/routing'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
