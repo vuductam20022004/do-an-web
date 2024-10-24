@@ -49,7 +49,10 @@ function AppBar() {
       </Box>
       {/* box right */}
       <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
-        <Button sx={{ border:'1px solid' }} variant="contained" startIcon = {<AddIcon/>} >Viết món mới</Button>
+        {/* <Button sx={{ border:'1px solid' }} variant="contained" startIcon = {<AddIcon/>} >Viết món mới</Button> */}
+        <Box sx={{ border:'1px solid white', height:'35px', width:'100px' }}>
+          <Typography sx={{ color:'white', textAlign:'center', marginTop:'5px' }}>80 điểm</Typography>
+        </Box>
         <TextField id="outlined-basic"
           label="Search....."
           type="text"

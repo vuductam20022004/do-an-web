@@ -73,10 +73,10 @@ import { useState, useEffect } from 'react'
 //   }
 // ]
 
-const  RecipeGrid = () => {
+const RecipeGrid = () => {
   const [data, setMonAns] = useState([])
   useEffect(() => {
-    fetch('http://localhost:3000/all')
+    fetch('http://localhost:3000/board/all')
       .then(response => response.json())
       .then(data => {
         console.log(data)

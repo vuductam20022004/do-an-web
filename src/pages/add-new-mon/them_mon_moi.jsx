@@ -12,6 +12,8 @@ import {
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import DeleteIcon from '@mui/icons-material/Delete'
 
+import SelectDanhMuc from '~/components/AppBar/Menu/select'
+
 const AddNewRecipe = () => {
   const [recipe, setRecipe] = useState({
     name: '',
@@ -42,8 +44,19 @@ const AddNewRecipe = () => {
       portion: '',
       cookingTime: '',
       ingredients: '',
-      steps: ''
+      steps: '',
+      coreMonAn:''
     })
+  }
+ //Up ảnh
+  const [preview, setPreview] = useState(null)
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      // Tạo URL tạm thời để hiển thị ảnh
+      setPreview(URL.createObjectURL(file))
+    }
   }
 
   return (
@@ -55,12 +68,23 @@ const AddNewRecipe = () => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
         <IconButton color="primary" component="label">
           <CloudUploadIcon sx={{ fontSize: 50 }} />
-          <Input type="file" sx={{ display: 'none' }} />
+          <Input
+            type="file"
+            sx={{ display: 'none' }}
+            onChange={handleFileChange}
+            accept="image/*"
+          />
         </IconButton>
+        {preview && (
+          <Box mt={2}>
+            <img src={preview} alt="Ảnh xem trước" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+          </Box>
+        )}
         <Typography variant="subtitle1">Bạn đăng hình món ăn ở đây ạ!</Typography>
       </Box>
 
       <form onSubmit={handleSubmit}>
+        <SelectDanhMuc />
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -131,6 +155,17 @@ const AddNewRecipe = () => {
               variant="outlined"
               multiline
               rows={4}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Tự đánh giá điểm của món ăn trên"
+              name="coreDiemMonAn"
+              value={recipe.coreMonAn}
+              onChange={handleChange}
+              variant="outlined"
             />
           </Grid>
 

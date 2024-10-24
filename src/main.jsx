@@ -8,17 +8,35 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 
 import theme from './theme'
+import AuthPage from '~/pages/Auth/login_and_register.jsx'
 
 // import AppRoutes from './pages/Routing/routing'
+
+import BoardContent from '~/pages/Boards/BoardContent/BoardContent' // Đường dẫn tới BoardContent
+import AddNewRecipe from '~/pages/add-new-mon/them_mon_moi'
+import RecipeDetail from '~/pages/chi_tiet_mon_an/chi_tiet_mon_an.jsx'
+import Board from '~/pages/Boards/_id.jsx'
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   <React.StrictMode>
     <CssVarsProvider theme={theme}>
       <CssBaseline />
-      {/* <Router> */}
-        <App />
-      {/* </Router> */}
+
+        {/* <AuthPage /> */}
+      <Router>
+        <Routes>
+          <Route path='' element = {<AuthPage />}/>
+          {/* <Route path="/board" element={<App />} /> */}
+          <Route path="/board" element={<Board />} />
+          <Route path="/add-new-mon/them_mon_moi" element={<AddNewRecipe />} />
+          <Route path="/chitietmonan/:ID" element={< RecipeDetail />} />
+        </Routes>
+      </Router>
+      {/* <App /> */}
+
     </CssVarsProvider>
   </React.StrictMode>
 

@@ -3,8 +3,16 @@ import sql from 'mssql'
 import express from 'express'
 import cors from 'cors'
 
+import jwt from 'jsonwebtoken'
+
 const app = express()
 app.use(cors())
+
+const JWT_SECRET = 'your_jwt_secret_key'
+
+
+
+// app.use(bodyParser.json())
 
 // Cấu hình kết nối tới SQL Server
 const dbConfig = {
@@ -36,10 +44,10 @@ app.listen(3000, () => {
 app.use(express.json()) // Để xử lý JSON từ request body
 
 // Route: Lấy danh sách tất cả mon an
-app.get('/all', async (req, res) => {
+app.get('/board/all', async (req, res) => {
   try {
-    const pool = await sql.connect(dbConfig) // Kết nối tới SQL Server
-    const result = await pool.request().query('SELECT * FROM monAn') // Truy vấn SQL
+    const pool = await sql.connect(dbConfig) 
+    const result = await pool.request().query('SELECT * FROM monAn')
     res.json(result.recordset) // Trả về kết quả
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
@@ -64,5 +72,39 @@ app.get('/chitietmonan/:id', async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi truy vấn:', err)
     res.status(500).json({ message: 'Lỗi máy chủ' })
+  }
+})
+
+
+
+
+//API đăng nhập
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body
+
+  try {
+    // Create a SQL query to find the user by username and password (plaintext)
+    const query = 'SELECT * FROM users WHERE username = @username AND password = @password'
+    const pool = await sql.connect()
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .input('password', sql.VarChar, password) // plaintext password
+      .query(query)
+
+    const user = result.recordset[0]// Get the first user from the result
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid username or password' })
+    }
+
+    // If credentials are valid, create a JWT token
+    // const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' })
+
+    // Send the token and success response
+    res.json({ success: true })
+    // res.json({ success: true, token })
+  } catch (error) {
+    console.error('Error during login:', error)
+    res.status(500).json({ success: false, message: 'Server error' })
   }
 })
