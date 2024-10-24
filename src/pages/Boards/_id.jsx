@@ -6,6 +6,7 @@ import App from '~/pages/Boards/BoardContent/SideBars/Router/routing'
 
 function Board() {
   return (
+    
     <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
       <AppBar />
       {/* <BoardBar board = {mockData?.board} /> */}
