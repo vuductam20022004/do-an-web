@@ -160,6 +160,39 @@ function LoginForm({ handleToggle }) {
 }
 
 function RegisterForm({ handleToggle }) {
+
+
+  const [fullName, setFullName] = useState('')
+  const [username, setUsername] = useState('')
+  const [birthYear, setBirthYear] = useState('')
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [gender, setGender] = useState('Nữ')
+
+  const handleRegister = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/register', {
+        fullName,
+        username,
+        birthYear,
+        password,
+        email,
+        gender
+      })
+
+      if (response.data.success) {
+        alert('Đăng ký thành công!')
+        handleToggle()// Chuyển về trang đăng nhập
+      } else {
+        alert(response.data.message || 'Đăng ký thất bại.')
+      }
+    } catch (error) {
+      console.error('Đăng ký lỗi:', error)
+      alert('Lỗi trong quá trình đăng kí')
+    }
+  }
+
+
   return (
     <>
       <Typography variant="h5" sx={{ textAlign: 'center', mb: 3 }}>
@@ -168,26 +201,31 @@ function RegisterForm({ handleToggle }) {
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <TextField label="Họ và tên" variant="outlined" fullWidth margin="normal" />
+          <TextField label="Họ và tên" variant="outlined" fullWidth margin="normal" value={fullName}
+            onChange={(e) => (setFullName(e.target.value)) } />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField label="User Name" variant="outlined" fullWidth margin="normal" />
+          <TextField label="User Name" variant="outlined" fullWidth margin="normal" value={username}
+            onChange={(e) => setUsername(e.target.value)} />
         </Grid>
       </Grid>
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <TextField label="Năm sinh" variant="outlined" fullWidth margin="normal" />
+          <TextField label="Năm sinh" variant="outlined" fullWidth margin="normal" value={birthYear}
+            onChange={(e) => setBirthYear(e.target.value)} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField label="Mật khẩu" variant="outlined" fullWidth margin="normal" type="password" />
+          <TextField label="Mật khẩu" variant="outlined" fullWidth margin="normal" type="password" value={password}
+            onChange={(e) => setPassword(e.target.value)} />
         </Grid>
       </Grid>
 
-      <TextField label="Gmail" variant="outlined" fullWidth margin="normal" />
+      <TextField label="Gmail" variant="outlined" fullWidth margin="normal" value={email}
+        onChange={(e) => setEmail(e.target.value)} />
 
       <Typography sx={{ mt: 2 }}>Giới tính</Typography>
-      <RadioGroup row defaultValue="Nữ">
+      <RadioGroup row value={gender} onChange={(e) => setGender(e.target.value)} >
         <FormControlLabel value="Nữ" control={<Radio />} label="Nữ" />
         <FormControlLabel value="Nam" control={<Radio />} label="Nam" />
         <FormControlLabel value="Khác" control={<Radio />} label="Khác" />
@@ -203,6 +241,7 @@ function RegisterForm({ handleToggle }) {
           bgcolor: '#f48fb1',
           '&:hover': { bgcolor: '#f06292' }
         }}
+        onClick={handleRegister}
       >
         Đăng Ký
       </Button>

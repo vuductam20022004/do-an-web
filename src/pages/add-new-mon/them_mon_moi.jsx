@@ -21,7 +21,8 @@ const AddNewRecipe = () => {
     portion: '',
     cookingTime: '',
     ingredients: '',
-    steps: ''
+    steps: '',
+    coreMonAn:null
   })
 
   const handleChange = (e) => {
@@ -45,7 +46,7 @@ const AddNewRecipe = () => {
       cookingTime: '',
       ingredients: '',
       steps: '',
-      coreMonAn:''
+      coreMonAn:null
     })
   }
  //Up ảnh

@@ -33,6 +33,7 @@ function BoardContent({ board }) {
         p: '10px 15px',
         overflow: 'auto'
       }}>
+        {/* anh quang cao */}
         <Box sx={{
           bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
           height:HEIGHT_AD,
@@ -40,7 +41,7 @@ function BoardContent({ board }) {
           p: '10px 15px'
           // overflow: 'auto'
         }}>
-          <img style={{ height:HEIGHT_AD, width:'85%', boxSizing:'', padding:'10px 5px' }} src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Image AD" />
+          <img style={{ height:HEIGHT_AD, width:'100%', boxSizing:'', padding:'10px 5px' }} src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Image AD" />
         </Box>
         <Box sx={{
           bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),

@@ -108,3 +108,49 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' })
   }
 })
+
+//API Đăng kí tài khoản
+app.post('/register', async (req, res) => {
+  try {
+    // Kết nối đến SQL Server
+    await sql.connect()
+
+    // Lấy dữ liệu từ body request
+    const { fullName, username, birthYear, password, email, gender } = req.body
+
+    // Kiểm tra nếu username đã tồn tại
+    const checkUserQuery = 'SELECT * FROM Users WHERE username = @username'
+    
+    const request = new sql.Request()
+    request.input('username', sql.VarChar, username)
+
+    const result = await request.query(checkUserQuery)
+
+    if (result.recordset.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username already exists' })
+    }
+
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = `
+      INSERT INTO Users (fullName, username, birthYear, password, email, gender)
+      VALUES (@fullName, @username, @birthYear, @password, @email, @gender)
+    `
+
+    // Tạo request mới và thêm các input
+    const insertRequest = new sql.Request()
+    insertRequest.input('fullName', sql.VarChar, fullName)
+    insertRequest.input('username', sql.VarChar, username)
+    insertRequest.input('birthYear', sql.Int, birthYear)
+    insertRequest.input('password', sql.VarChar, password)
+    insertRequest.input('email', sql.VarChar, email)
+    insertRequest.input('gender', sql.VarChar, gender)
+
+    // Thực hiện câu lệnh insert
+    await insertRequest.query(query)
+
+    res.status(201).json({ success: true, message: 'User registered successfully' })
+  } catch (error) {
+    console.error('Error during registration:', error)
+    res.status(500).json({ success: false, message: 'Registration failed' })
+  }
+})
