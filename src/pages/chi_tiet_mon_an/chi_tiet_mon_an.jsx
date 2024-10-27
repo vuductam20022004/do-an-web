@@ -90,7 +90,7 @@ console.log(recipe)
       </Box>
 
       <Box sx={{ mt: 2 }}>
-        <Typography variant="h4">{recipe.moTa}</Typography>
+        <Typography variant="h4">{recipe.name}</Typography>
         <Typography color="text.secondary">{recipe.moTa}</Typography>
       </Box>
 

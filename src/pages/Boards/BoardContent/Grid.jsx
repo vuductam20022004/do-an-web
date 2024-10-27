@@ -98,13 +98,13 @@ const RecipeGrid = () => {
                 alt={item.image}
               />
               <CardContent>
-                <Typography variant="h6">{item.moTa}</Typography>
+                <Typography variant="h6">{item.name}</Typography>
                 <Typography variant="body2" color="textSecondary">{item.moTa}</Typography>
                 <IconButton size="small">
                   <BookmarkBorderIcon />
                 </IconButton>
                 <Typography variant="body2" color="textSecondary">
-                  {item.nguyenLieu} Tác giả
+                  {item.userId} Tác giả
                 </Typography>
               </CardContent>
             </Card>

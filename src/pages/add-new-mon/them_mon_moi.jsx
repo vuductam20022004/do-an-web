@@ -16,12 +16,16 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
+import { useNavigate } from 'react-router-dom'
 
 
 
 
 
 const AddNewRecipe = () => {
+
+  const navigate = useNavigate()
+
   const [recipe, setRecipe] = useState({
     name: '',
     description: '',
@@ -29,7 +33,7 @@ const AddNewRecipe = () => {
     cookingTime: '',
     ingredients: '',
     steps: '',
-    coreMonAn:null
+    coreMonAn:''
   })
 
   const handleChange = (e) => {
@@ -40,6 +44,7 @@ const AddNewRecipe = () => {
   }
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault()
     // Logic xử lý đăng món ăn
     const formData = new FormData()
@@ -60,7 +65,8 @@ const AddNewRecipe = () => {
 
     try {
       const token = localStorage.getItem('token') // Lấy token từ localStorage
-      const response = await fetch('http://localhost:3000/add-recipe', {
+      const response = await fetch('http://localhost:3000/add-new-mon/them_mon_moi', {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -74,6 +80,7 @@ const AddNewRecipe = () => {
 
       const data = await response.json()
       console.log('Món ăn đã được thêm thành công:', data)
+      navigate('/board')
 
       // Reset form sau khi thêm thành công
       handleReset()
@@ -82,6 +89,7 @@ const AddNewRecipe = () => {
       console.error('Error adding recipe:', error)
     }
     console.log(recipe)
+    console.log(danhMuc)
   }
 
   const handleReset = () => {
@@ -105,6 +113,7 @@ const AddNewRecipe = () => {
     const file = event.target.files[0]
     if (file) {
       setSelectedFile(file) // Lưu file để gửi lên server
+
       // Tạo URL tạm thời để hiển thị ảnh
       setPreview(URL.createObjectURL(file))
     }
@@ -151,9 +160,9 @@ const AddNewRecipe = () => {
             label="Danh mục"
             onChange={handleChangeDanhMuc}
           >
-            <MenuItem value={10}>Chay</MenuItem>
-            <MenuItem value={20}>Mặn</MenuItem>
-            <MenuItem value={30}>Bánh</MenuItem>
+            <MenuItem value='chay'>Chay</MenuItem>
+            <MenuItem value='mặn'>Mặn</MenuItem>
+            <MenuItem value='bánh'>Bánh</MenuItem>
           </Select>
         </FormControl>
 
@@ -241,7 +250,7 @@ const AddNewRecipe = () => {
             <TextField
               fullWidth
               label="Tự đánh giá điểm của món ăn trên"
-              name="coreDiemMonAn"
+              name="coreMonAn"
               value={recipe.coreMonAn}
               onChange={handleChange}
               variant="outlined"

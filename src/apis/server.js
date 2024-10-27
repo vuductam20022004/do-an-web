@@ -2,8 +2,9 @@
 import sql from 'mssql'
 import express from 'express'
 import cors from 'cors'
-
 import jwt from 'jsonwebtoken'
+import multer from 'multer'
+
 import authenticateUerToken from '../pages/Auth/authenticateUserToken.js'
 
 
@@ -45,7 +46,7 @@ app.use(express.json()) // Để xử lý JSON từ request body
 // Route: Lấy danh sách tất cả mon an
 app.get('/board/all', async (req, res) => {
   try {
-    const pool = await sql.connect(dbConfig) 
+    const pool = await sql.connect(dbConfig)
     const result = await pool.request().query('SELECT * FROM monAn')
     res.json(result.recordset) // Trả về kết quả
   } catch (err) {
@@ -155,7 +156,7 @@ app.post('/register', async (req, res) => {
   }
 })
 
-//API THÊM MÓN MỚI 
+//API THÊM MÓN MỚI
 
 
 // Cấu hình multer để xử lý file upload
@@ -164,7 +165,7 @@ const upload = multer({ storage })
 
 
 
-app.post('/add-recipe', authenticateUerToken, upload.single('image'), async (req, res) => {
+app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image'), async (req, res) => {
   const { danhMuc, name, description, portion, cookingTime, ingredients, steps, coreMonAn } = req.body
   const userId = req.userIdAuthen // Lấy userId đã xác thực từ middleware
 

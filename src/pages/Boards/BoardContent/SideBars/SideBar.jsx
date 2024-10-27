@@ -31,7 +31,6 @@ const SideBar = () => {
   const navigate = useNavigate()
 
   const handleClickThemMonMoi = () => {
-    console.log('ok')
     navigate('/add-new-mon/them_mon_moi')
   }
 
