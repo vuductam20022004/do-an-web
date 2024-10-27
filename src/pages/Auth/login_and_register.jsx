@@ -27,67 +27,48 @@ function AuthPage() {
   }
 
   return (
-    <Grid container sx={{ height: '100vh', bgcolor: '#fce4ec' }}>
-      {/* Left Side with Welcome Text */}
-      <Grid
-        item
-        xs={12}
-        md={6}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          bgcolor: 'white',
-          padding: 4,
-          borderRadius: '16px'
-        }}
-      >
-        <Box sx={{ maxWidth: 500, textAlign: 'center' }}>
-          <img src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Ngoan Xinh Yêu Logo" style={{ maxWidth: '200px' }} />
-          <Typography variant="h5" sx={{ mt: 2, color:'black' }}>
-            {isLogin
-              ? 'Này bạn ơi, vào bếp cùng tụi mình nha! 🍳🍲'
-              : 'Chào mừng đến với đại gia đình Bếp Ngoan Xinh Yêu! 🌸'}
-          </Typography>
-          <Typography sx={{ mt: 2, color:'black' }}>
-            {isLogin
-              ? 'Nếu bạn yêu thích những món ăn ngon và muốn khám phá cả thế giới ẩm thực từ bếp nhỏ xinh của mình, thì bạn đã đến đúng nơi rồi đó! Bếp Ngoan Xinh Yêu sẵn sàng đón chào bạn!'
-              : 'Chỉ một vài bước đăng ký đơn giản, bạn sẽ chính thức gia nhập cộng đồng yêu bếp và đam mê ẩm thực. Cùng nhau, chúng ta sẽ khám phá những công thức món ăn ngon, sáng tạo, và truyền cảm hứng nấu nướng mỗi ngày!'}
-          </Typography>
-        </Box>
-      </Grid>
 
-      {/* Right Side with Login/Register Form */}
-      <Grid
-        item
-        xs={12}
-        md={6}
+    <Box
+      item
+      xs={12}
+      md={6}
+      sx={{
+        // display: 'flex',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // bgcolor: '#fce4ec',
+        // height:'100vh'
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: 'url("https://bloganchoi.com/wp-content/uploads/2020/06/du-lich-nui-rung-tay-bac-1.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundBlendMode: 'darken',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      }}
+    >
+      <Paper
+        elevation={6}
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          bgcolor: '#fce4ec'
+          padding: 4,
+          borderRadius: '16px',
+          maxWidth: 400,
+          width: '100%',
+          bgcolor: '#66FFCC',
+          justifyContent: 'center'
+
         }}
       >
-        <Paper
-          elevation={6}
-          sx={{
-            padding: 4,
-            borderRadius: '16px',
-            maxWidth: 400,
-            width: '100%',
-            bgcolor: 'white'
-          }}
-        >
-          {isLogin ? (
-            <LoginForm handleToggle={handleToggle} />
-          ) : (
-            <RegisterForm handleToggle={handleToggle} />
-          )}
-        </Paper>
-      </Grid>
-    </Grid>
+        {isLogin ? (
+          <LoginForm handleToggle={handleToggle} />
+        ) : (
+          <RegisterForm handleToggle={handleToggle} />
+        )}
+      </Paper>
+    </Box>
   )
 }
 
@@ -178,12 +159,11 @@ function RegisterForm({ handleToggle }) {
         email,
         gender
       })
-
       if (response.data.success) {
         alert('Đăng ký thành công!')
         handleToggle()// Chuyển về trang đăng nhập
       } else {
-        alert(response.data.message || 'Đăng ký thất bại.')
+        alert(response.data.message)
       }
     } catch (error) {
       console.error('Đăng ký lỗi:', error)

@@ -91,7 +91,7 @@ console.log(recipe)
 
       <Box sx={{ mt: 2 }}>
         <Typography variant="h4">{recipe.name}</Typography>
-        <Typography color="text.secondary">{recipe.moTa}</Typography>
+        <Typography color="text.secondary">Suy nghĩ của tác giả: {recipe.moTa}</Typography>
       </Box>
 
       <Box sx={{ mt: 3 }}>

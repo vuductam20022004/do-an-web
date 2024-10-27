@@ -128,9 +128,8 @@ app.post('/register', async (req, res) => {
     const result = await request.query(checkUserQuery)
 
     if (result.recordset.length > 0) {
-      return res.status(400).json({ success: false, message: 'Username already exists' })
+      return res.status(201).json({ success: false, message: 'Username already exists' })
     }
-
     // Thực hiện câu lệnh SQL để lưu người dùng vào database
     const query = `
       INSERT INTO Users (fullName, username, birthYear, password, email, gender)
@@ -139,12 +138,12 @@ app.post('/register', async (req, res) => {
 
     // Tạo request mới và thêm các input
     const insertRequest = new sql.Request()
-    insertRequest.input('fullName', sql.VarChar, fullName)
-    insertRequest.input('username', sql.VarChar, username)
+    insertRequest.input('fullName', sql.NVarChar, fullName)
+    insertRequest.input('username', sql.NVarChar, username)
     insertRequest.input('birthYear', sql.Int, birthYear)
     insertRequest.input('password', sql.VarChar, password)
     insertRequest.input('email', sql.VarChar, email)
-    insertRequest.input('gender', sql.VarChar, gender)
+    insertRequest.input('gender', sql.NVarChar, gender)
 
     // Thực hiện câu lệnh insert
     await insertRequest.query(query)
