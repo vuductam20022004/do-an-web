@@ -4,13 +4,12 @@ import express from 'express'
 import cors from 'cors'
 
 import jwt from 'jsonwebtoken'
+import authenticateUerToken from '../pages/Auth/authenticateUserToken.js'
+
+
 
 const app = express()
 app.use(cors())
-
-const JWT_SECRET = 'your_jwt_secret_key'
-
-
 
 // app.use(bodyParser.json())
 
@@ -57,10 +56,10 @@ app.get('/board/all', async (req, res) => {
 
 
 // API lấy chi tiết món theo ID
-app.get('/chitietmonan/:id', async (req, res) => {
+app.get('/chitietmonan/:id', authenticateUerToken, async (req, res) => {
   const { id } = req.params// Lấy id từ params URL
-  // console.log(id)
-
+  const t = req.userIdAuthen
+  console.log(t)
   try {
     // Tạo một truy vấn để lấy chi tiết món ăn từ SQL Server
     const result = await sql.query`SELECT * FROM monAn WHERE id = ${id} `
@@ -75,10 +74,9 @@ app.get('/chitietmonan/:id', async (req, res) => {
   }
 })
 
-
-
-
 //API đăng nhập
+
+const secretKey = 'vuductam'//PrivateKey
 app.post('/login', async (req, res) => {
   const { username, password } = req.body
 
@@ -88,26 +86,28 @@ app.post('/login', async (req, res) => {
     const pool = await sql.connect()
     const result = await pool.request()
       .input('username', sql.VarChar, username)
-      .input('password', sql.VarChar, password) // plaintext password
+      .input('password', sql.VarChar, password)
       .query(query)
 
-    const user = result.recordset[0]// Get the first user from the result
+    const user = result.recordset[0]
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid username or password' })
     }
-
-    // If credentials are valid, create a JWT token
-    // const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' })
+    const userId = result.recordset[0].ID
+    //Tạo token
+    const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' })
 
     // Send the token and success response
-    res.json({ success: true })
-    // res.json({ success: true, token })
+    res.json({ success: true, token })
+
   } catch (error) {
     console.error('Error during login:', error)
     res.status(500).json({ success: false, message: 'Server error' })
   }
 })
+
+
 
 //API Đăng kí tài khoản
 app.post('/register', async (req, res) => {
@@ -152,5 +152,53 @@ app.post('/register', async (req, res) => {
   } catch (error) {
     console.error('Error during registration:', error)
     res.status(500).json({ success: false, message: 'Registration failed' })
+  }
+})
+
+//API THÊM MÓN MỚI 
+
+
+// Cấu hình multer để xử lý file upload
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
+
+
+
+app.post('/add-recipe', authenticateUerToken, upload.single('image'), async (req, res) => {
+  const { danhMuc, name, description, portion, cookingTime, ingredients, steps, coreMonAn } = req.body
+  const userId = req.userIdAuthen // Lấy userId đã xác thực từ middleware
+
+  try {
+    // Kết nối đến SQL Server
+    const pool = await sql.connect()
+
+    // Nếu có file ảnh thì xử lý ảnh ở đây (nếu bạn lưu ảnh vào cơ sở dữ liệu)
+    let image = null
+    if (req.file) {
+      image = req.file.buffer // Lấy buffer của file để lưu vào cơ sở dữ liệu (nếu cần)
+    }
+
+    // Thực hiện truy vấn để thêm món ăn mới
+    const query = `
+      INSERT INTO monAn (danhMuc, name, moTa, khauPhan, timeNau, nguyenLieu, step, core, image, userId)
+      VALUES (@danhMuc, @name, @description, @portion, @cookingTime, @ingredients, @steps, @coreMonAn, @image, @userId)
+    `
+    await pool.request()
+      .input('danhMuc', sql.NVarChar, danhMuc)
+      .input('name', sql.NVarChar, name)
+      .input('description', sql.NVarChar, description)
+      .input('portion', sql.Int, portion)
+      .input('cookingTime', sql.Int, cookingTime)
+      .input('ingredients', sql.NVarChar, ingredients)
+      .input('steps', sql.NVarChar, steps)
+      .input('coreMonAn', sql.Int, coreMonAn)
+      .input('image', sql.VarBinary, image)
+      .input('userId', sql.Int, userId)
+      .query(query)
+
+    res.status(201).json({ success: true, message: 'Recipe added successfully' })
+  } catch (error) {
+    console.error('Error adding recipe:', error)
+    res.status(500).json({ success: false, message: 'Server error' })
   }
 })

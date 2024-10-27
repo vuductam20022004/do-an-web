@@ -105,11 +105,10 @@ function LoginForm({ handleToggle }) {
       const response = await axios.post('http://localhost:3000/login', { username, password })
       if (response.data.success) {
         alert('Login successful')
-        // localStorage.setItem('token', response.data.token)
-        // You can redirect or perform other actions on successful login
-  
-        navigate('/board')
-
+        localStorage.setItem('token', response.data.token)
+        // console.log(response.data.token)
+        //Lưu token vào localStorage của Client
+        navigate('/board')//Điều hướng
 
       } else {
         alert('Invalid credentials')

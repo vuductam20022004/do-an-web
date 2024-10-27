@@ -37,13 +37,19 @@ function RecipeDetail() {
 
   useEffect(() => {
 
-    // Giả sử hàm fetchRecipeDetail để gọi API lấy dữ liệu theo ID
+    //hàm fetchRecipeDetail để gọi API lấy dữ liệu theo ID
     const fetchRecipeDetail = async (id) => {
       try {
-        const response = await fetch(`http://localhost:3000/chitietmonan/${id}`)
+        const token = localStorage.getItem('token')
+        const response = await fetch(`http://localhost:3000/chitietmonan/${id}`, {
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        })
         const data = await response.json()
         // console.log(data)
-        setRecipe(data) // Cập nhật state với dữ liệu món ăn
+        setRecipe(data)
+        // Cập nhật state với dữ liệu món ăn
       } catch (error) {
         console.error('Lỗi khi lấy chi tiết món ăn:', error)
       }
@@ -84,8 +90,8 @@ console.log(recipe)
       </Box>
 
       <Box sx={{ mt: 2 }}>
-    <Typography variant="h4">{recipe.moTa}</Typography>
-    <Typography color="text.secondary">{recipe.moTa}</Typography>
+        <Typography variant="h4">{recipe.moTa}</Typography>
+        <Typography color="text.secondary">{recipe.moTa}</Typography>
       </Box>
 
       <Box sx={{ mt: 3 }}>
@@ -148,15 +154,8 @@ console.log(recipe)
         </Button>
       </Box>
 
-
-        
-
     </Box>
-
-
-
   )
-  
 }
 
 export default RecipeDetail
