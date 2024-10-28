@@ -19,9 +19,7 @@ import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { red } from '@mui/material/colors'
 
-
-
-
+import axios from 'axios'
 
 
 function RecipeDetail() {
@@ -36,6 +34,27 @@ function RecipeDetail() {
   const { ID } = useParams()
   // console.log(ID)
   const [recipe, setRecipe] = useState(null)
+
+  //Click button Luu Mon
+  const handleClickLuuMon = async() => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post('http://localhost:3000/luu-mon', { ID }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      if (response.data.success) {
+        alert('Lưu Thành Công')
+      } else {
+        alert(response.data.message)
+      }
+    } catch (error) {
+      console.error('Đăng ký lỗi:', error)
+      alert('Món này đã được lưu trước kia')
+    }
+  }
+
 
   useEffect(() => {
 
@@ -88,6 +107,7 @@ console.log(recipe)
           variant="contained"
           startIcon={<SaveIcon />}
           color="primary"
+          onClick={handleClickLuuMon}
         >
       Lưu món
         </Button>

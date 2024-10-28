@@ -59,8 +59,6 @@ app.get('/board/all', async (req, res) => {
 // API lấy chi tiết món theo ID
 app.get('/chitietmonan/:id', authenticateUerToken, async (req, res) => {
   const { id } = req.params// Lấy id từ params URL
-  const t = req.userIdAuthen
-  console.log(t)
   try {
     // Tạo một truy vấn để lấy chi tiết món ăn từ SQL Server
     const result = await sql.query`SELECT * FROM monAn WHERE id = ${id} `
@@ -206,8 +204,6 @@ app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image
 
 
 
-
-
 //API XEm TẤT CẢ CÁC MÓN CỦA TÔI
 app.get('/mon-cua-toi', authenticateUerToken, async (req, res) => {
   try {
@@ -218,5 +214,34 @@ app.get('/mon-cua-toi', authenticateUerToken, async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
     res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+
+//API LƯU MÓN ĂN
+app.post('/luu-mon', authenticateUerToken, async (req, res) => {
+  try {
+    const idMonAn = req.body.ID
+    const userId = req.userIdAuthen // Lấy id user
+    // Kết nối đến SQL Server
+    await sql.connect()
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = `
+      INSERT INTO luuMonAn (userId, idMonAn)
+      VALUES (@userId, @idMonAn )
+    `
+
+    // Tạo request mới và thêm các input
+    const insertRequest = new sql.Request()
+    insertRequest.input('userId', sql.Int, userId)
+    insertRequest.input('idMonAn', sql.Int, idMonAn)
+
+    // Thực hiện câu lệnh insert
+    await insertRequest.query(query)
+
+    res.status(201).json({ success: true, message: 'Lưu món thành công' })
+  } catch (error) {
+    console.error('Error during Lưu món:', error)
+    res.status(500).json({ success: false, message: 'Lỗi trong quá trình lưu món' })
   }
 })
