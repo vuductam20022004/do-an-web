@@ -202,3 +202,21 @@ app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image
     res.status(500).json({ success: false, message: 'Server error' })
   }
 })
+
+
+
+
+
+
+//API XEm TẤT CẢ CÁC MÓN CỦA TÔI
+app.get('/mon-cua-toi', authenticateUerToken, async (req, res) => {
+  try {
+    const userId = req.userIdAuthen
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request().query(`SELECT * FROM monAn where userId = ${userId}`)
+    res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})

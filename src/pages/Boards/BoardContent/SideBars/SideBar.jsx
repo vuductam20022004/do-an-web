@@ -34,6 +34,13 @@ const SideBar = () => {
     navigate('/add-new-mon/them_mon_moi')
   }
 
+  const handleClickMonCuaToi = () => {
+    navigate('/mon-cua-toi')
+  }
+  const handleTrangChu = () => {
+    navigate('/board')
+  }
+
   const [searchValue, setSearchValue] = useState('')
 
   return (
@@ -43,7 +50,7 @@ const SideBar = () => {
 
       {/* Menu items */}
 
-      <ListItem button>
+      <ListItem button onClick={handleTrangChu}>
         <ListItemIcon>
           <HomeIcon />
         </ListItemIcon>
@@ -104,7 +111,7 @@ const SideBar = () => {
         <ListItemText primary="Món đã lưu" />
       </ListItem>
       
-      <ListItem button>
+      <ListItem button onClick={handleClickMonCuaToi}>
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>

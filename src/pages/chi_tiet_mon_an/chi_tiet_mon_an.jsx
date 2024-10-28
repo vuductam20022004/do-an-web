@@ -10,12 +10,14 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Divider
+  Divider,
+  colors
 } from '@mui/material'
 import { AccessTime, Group } from '@mui/icons-material'
 import SaveIcon from '@mui/icons-material/Save'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { red } from '@mui/material/colors'
 
 
 
@@ -79,6 +81,8 @@ console.log(recipe)
           <Typography>{recipe.timeNau} phút</Typography>
           <Group sx={{ ml: 3, mr: 1 }} />
           <Typography>{recipe.khauPhan} người</Typography>
+          {/* <Group sx={{ ml: 3, mr: 1 }} /> */}
+          <Typography variant='h6' sx={{ ml: '50px' } } align='right' >{recipe.core} ĐIỂM</Typography>
         </Box>
         <Button
           variant="contained"
@@ -95,7 +99,8 @@ console.log(recipe)
       </Box>
 
       <Box sx={{ mt: 3 }}>
-        <Typography variant="h6">{recipe.nguyenLieu}</Typography>
+        <Typography variant="h6">Các nguyên liệu:</Typography>
+        <Typography variant="">{recipe.nguyenLieu}</Typography>
         {/* <List>
           <ListItem>
             <ListItemText primary="1. Nguyên liệu 1" />
