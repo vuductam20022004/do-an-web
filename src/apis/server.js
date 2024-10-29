@@ -94,8 +94,10 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid username or password' })
     }
     const userId = result.recordset[0].ID
+    const coreUser = result.recordset[0].core
     //Tạo token
-    const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' })
+    const token = jwt.sign({ userId, coreUser }, secretKey, { expiresIn: '1h' })
+
 
     // Send the token and success response
     res.json({ success: true, token })
@@ -165,6 +167,7 @@ const upload = multer({ storage })
 app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image'), async (req, res) => {
   const { danhMuc, name, description, portion, cookingTime, ingredients, steps, coreMonAn } = req.body
   const userId = req.userIdAuthen // Lấy userId đã xác thực từ middleware
+  console.log('ok')
 
   try {
     // Kết nối đến SQL Server
@@ -243,5 +246,24 @@ app.post('/luu-mon', authenticateUerToken, async (req, res) => {
   } catch (error) {
     console.error('Error during Lưu món:', error)
     res.status(500).json({ success: false, message: 'Lỗi trong quá trình lưu món' })
+  }
+})
+
+
+
+//API LẤY RA TẤT CẢ CÁC MÓN ĂN ĐÃ LƯU CỦA MỖI USER KHÁC NHAU
+
+app.get('/mon-da-luu', authenticateUerToken, async (req, res) => {
+  try {
+    const userId = req.userIdAuthen
+
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request().query(`select luuMonAn.userId, ID, [name], moTa, nguyenLieu, step,khauPhan,timeNau,[image],core from luuMonAn 
+join monAn on luuMonAn.idMonAn = monAn.ID
+where luuMonAn.userId = ${userId}`)
+    res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
   }
 })

@@ -40,6 +40,9 @@ const SideBar = () => {
   const handleTrangChu = () => {
     navigate('/board')
   }
+  const handleMondaLuu = () => {
+    navigate('/mon-da-luu')
+  }
 
   const [searchValue, setSearchValue] = useState('')
 
@@ -104,7 +107,7 @@ const SideBar = () => {
         <ListItemText primary="Thêm món mới"/>
       </ListItem>
 
-      <ListItem button>
+      <ListItem button onClick={handleMondaLuu}>
         <ListItemIcon>
           <SaveIcon />
         </ListItemIcon>

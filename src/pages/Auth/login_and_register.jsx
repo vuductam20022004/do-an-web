@@ -87,7 +87,6 @@ function LoginForm({ handleToggle }) {
       if (response.data.success) {
         alert('Login successful')
         localStorage.setItem('token', response.data.token)
-        // console.log(response.data.token)
         //Lưu token vào localStorage của Client
         navigate('/board')//Điều hướng
 

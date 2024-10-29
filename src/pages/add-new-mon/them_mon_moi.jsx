@@ -65,6 +65,7 @@ const AddNewRecipe = () => {
 
     try {
       const token = localStorage.getItem('token') // Lấy token từ localStorage
+      console.log(token)
       const response = await fetch('http://localhost:3000/add-new-mon/them_mon_moi', {
         method: 'POST',
         headers: {

@@ -17,6 +17,7 @@ import AddNewRecipe from '~/pages/add-new-mon/them_mon_moi'
 import RecipeDetail from '~/pages/chi_tiet_mon_an/chi_tiet_mon_an.jsx'
 import Board from '~/pages/Boards/_id.jsx'
 import MonCuaToi from '~/pages/monCuaToi/monCuaToi.jsx'
+import MonDaLuu from '~/pages/monDaLuu/monDaLuu.jsx'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/add-new-mon/them_mon_moi" element={<AddNewRecipe />} />
           <Route path="/chitietmonan/:ID" element={< RecipeDetail />} />
           <Route path="/mon-cua-toi" element = {< MonCuaToi /> } />
+          <Route path="/mon-da-luu" element = {< MonDaLuu /> } />
 
         </Routes>
       </Router>
