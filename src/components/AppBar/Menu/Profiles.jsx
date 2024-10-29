@@ -9,14 +9,21 @@ import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import Logout from '@mui/icons-material/Logout'
 
+
+import { useNavigate } from 'react-router-dom'
+
 function Recent() {
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const navigate = useNavigate()
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
     setAnchorEl(null)
+  }
+  const handleTrangCaNhan = () => {
+    navigate('/trang-ca-nhan')
   }
   return (
     <Box>
@@ -44,8 +51,8 @@ function Recent() {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        <MenuItem >
-          <Avatar sx={{width:28, height:28, mr:2 }} /> Profile
+        <MenuItem onClick={handleTrangCaNhan} >
+          <Avatar sx={{ width:28, height:28, mr:2 }} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem >

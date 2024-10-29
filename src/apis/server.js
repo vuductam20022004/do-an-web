@@ -109,7 +109,6 @@ app.post('/login', async (req, res) => {
 })
 
 
-
 //API Đăng kí tài khoản
 app.post('/register', async (req, res) => {
   try {
@@ -161,7 +160,6 @@ app.post('/register', async (req, res) => {
 // Cấu hình multer để xử lý file upload
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
-
 
 
 app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image'), async (req, res) => {

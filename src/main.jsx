@@ -18,6 +18,7 @@ import RecipeDetail from '~/pages/chi_tiet_mon_an/chi_tiet_mon_an.jsx'
 import Board from '~/pages/Boards/_id.jsx'
 import MonCuaToi from '~/pages/monCuaToi/monCuaToi.jsx'
 import MonDaLuu from '~/pages/monDaLuu/monDaLuu.jsx'
+import ProfilePage from '~/pages/Profile/profile.jsx'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -26,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CssVarsProvider theme={theme}>
       <CssBaseline />
 
-        {/* <AuthPage /> */}
+      {/* <AuthPage /> */}
       <Router>
         <Routes>
           <Route path='' element = {<AuthPage />}/>
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/chitietmonan/:ID" element={< RecipeDetail />} />
           <Route path="/mon-cua-toi" element = {< MonCuaToi /> } />
           <Route path="/mon-da-luu" element = {< MonDaLuu /> } />
+          <Route path="/trang-ca-nhan" element = {< ProfilePage /> } />
 
         </Routes>
       </Router>

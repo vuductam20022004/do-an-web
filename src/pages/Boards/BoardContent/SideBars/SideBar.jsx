@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemIcon, ListItemText, Avatar, Typography } from '@mui/material'
+import { List, ListItem, ListItemIcon, ListItemText, Avatar, Typography, Box } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 
@@ -47,81 +47,83 @@ const SideBar = () => {
   const [searchValue, setSearchValue] = useState('')
 
   return (
-    <List>
-      {/* Logo và tên thương hiệu */}
-      <BrandLogo />
+    <Box>
+      <List>
+        {/* Logo và tên thương hiệu */}
+        <BrandLogo />
 
-      {/* Menu items */}
+        {/* Menu items */}
 
-      <ListItem button onClick={handleTrangChu}>
-        <ListItemIcon>
-          <HomeIcon />
-        </ListItemIcon>
-        <ListItemText primary="Trang chủ" />
-      </ListItem>
+        <ListItem button onClick={handleTrangChu}>
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Trang chủ" />
+        </ListItem>
 
-      {/* search */}
-      <ListItem button>
-        <TextField id="outlined-basic"
-          label="Tìm kiếm món ăn"
-          type="text"
-          size='small'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'white' }}/>
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <CloseIcon
-                fontSize='small'
-                sx={{
-                  color:'white',
-                  cursor:'pointer'
-                }}
-                onClick = {(e) => setSearchValue('')}
-              />
-            )
-          }}
-          sx={{
-            minWidth: '120px',
-            maxWidth: '180px',
-            '& label':{ color:'white' },
-            '& input':{ color:'white' },
-            '& label.Mui-focused':{ color:'white' },
-            '& .MuiOutlinedInput-root':{
-              '& fieldset': { borderColor: 'white' },
-              '&:hover fieldset': { borderColor: 'white' },
-              '&.Mui-focused fieldset': { borderColor: 'white' }
-            }
-          }}>
-        </TextField>
-      </ListItem>
-      
-      <ListItem button onClick={handleClickThemMonMoi}>
-        <ListItemIcon>
-          <AddIcon />
-        </ListItemIcon>
-        <ListItemText primary="Thêm món mới"/>
-      </ListItem>
+        {/* search */}
+        <ListItem button>
+          <TextField id="outlined-basic"
+            label="Tìm kiếm món ăn"
+            type="text"
+            size='small'
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'white' }}/>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <CloseIcon
+                  fontSize='small'
+                  sx={{
+                    color:'white',
+                    cursor:'pointer'
+                  }}
+                  onClick = {(e) => setSearchValue('')}
+                />
+              )
+            }}
+            sx={{
+              minWidth: '120px',
+              maxWidth: '180px',
+              '& label':{ color:'white' },
+              '& input':{ color:'white' },
+              '& label.Mui-focused':{ color:'white' },
+              '& .MuiOutlinedInput-root':{
+                '& fieldset': { borderColor: 'white' },
+                '&:hover fieldset': { borderColor: 'white' },
+                '&.Mui-focused fieldset': { borderColor: 'white' }
+              }
+            }}>
+          </TextField>
+        </ListItem>
+        
+        <ListItem button onClick={handleClickThemMonMoi}>
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary="Thêm món mới"/>
+        </ListItem>
 
-      <ListItem button onClick={handleMondaLuu}>
-        <ListItemIcon>
-          <SaveIcon />
-        </ListItemIcon>
-        <ListItemText primary="Món đã lưu" />
-      </ListItem>
-      
-      <ListItem button onClick={handleClickMonCuaToi}>
-        <ListItemIcon>
-          <PersonIcon />
-        </ListItemIcon>
-        <ListItemText primary="Món của tôi" />
-      </ListItem>
-      
-    </List>
+        <ListItem button onClick={handleMondaLuu}>
+          <ListItemIcon>
+            <SaveIcon />
+          </ListItemIcon>
+          <ListItemText primary="Món đã lưu" />
+        </ListItem>
+        
+        <ListItem button onClick={handleClickMonCuaToi}>
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="Món của tôi" />
+        </ListItem>
+        
+      </List>
+    </Box>
   )
 }
 

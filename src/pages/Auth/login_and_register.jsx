@@ -15,9 +15,6 @@ import {
 
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import App from '~/App'
-
-
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true) // State to toggle between login and register
@@ -73,7 +70,6 @@ function AuthPage() {
 }
 
 function LoginForm({ handleToggle }) {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 

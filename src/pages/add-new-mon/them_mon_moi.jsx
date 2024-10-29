@@ -15,6 +15,9 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import AppBar from '~/components/AppBar/AppBar'
+import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
+
 
 import { useNavigate } from 'react-router-dom'
 
@@ -122,164 +125,192 @@ const AddNewRecipe = () => {
 
   //Danh  mucj mon an
   const [danhMuc, setDanhMuc] = useState('')
+  const HEIGHT_AD = '200PX'
   const handleChangeDanhMuc = (event) => {
     setDanhMuc(event.target.value)
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Thêm món ăn mới
-      </Typography>
-      {/* Upload hình ảnh */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
-        <IconButton color="primary" component="label">
-          <CloudUploadIcon sx={{ fontSize: 50 }} />
-          <Input
-            type="file"
-            sx={{ display: 'none' }}
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-        </IconButton>
-        {preview && (
-          <Box mt={2}>
-            <img src={preview} alt="Ảnh xem trước" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+    <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
+      <AppBar />
+      <Box sx={{
+        display:'flex',
+        height:(theme) => theme.trello - theme.trello.appBarHeight,
+        overflowY:'hidden'
+
+
+      }}>
+        <Box sx={{
+          bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
+          height:'inherit',
+          width:'15% ',
+          p: '10px 0'
+        }}>
+          <SideBar />
+        </Box>
+
+        <Box maxWidth="md" sx={{
+          // bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
+          width:'85% ',
+          p: '10px 15px',
+          overflow: 'auto',
+          mt: 5, mb: 5, ml:15,
+          height:(theme) => theme.trello.boardContentHeight
+        }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Thêm món ăn mới
+          </Typography>
+          {/* Upload hình ảnh */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+            <IconButton color="primary" component="label">
+              <CloudUploadIcon sx={{ fontSize: 50 }} />
+              <Input
+                type="file"
+                sx={{ display: 'none' }}
+                onChange={handleFileChange}
+                accept="image/*"
+              />
+            </IconButton>
+            {preview && (
+              <Box mt={2}>
+                <img src={preview} alt="Ảnh xem trước" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+              </Box>
+            )}
+            <Typography variant="subtitle1">Bạn đăng hình món ăn ở đây ạ!</Typography>
           </Box>
-        )}
-        <Typography variant="subtitle1">Bạn đăng hình món ăn ở đây ạ!</Typography>
+
+          <form onSubmit={handleSubmit}>
+            {/* Danh muc mon an */}
+            <FormControl sx={{ m: 1, width:'400px' }} size="big">
+              <InputLabel variant='outlined' id="demo-select-small-label">Danh mục món ăn</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={danhMuc}
+                label="Danh mục"
+                onChange={handleChangeDanhMuc}
+              >
+                <MenuItem value='chay'>Chay</MenuItem>
+                <MenuItem value='mặn'>Mặn</MenuItem>
+                <MenuItem value='bánh'>Bánh</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* tên món ăn */}
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Tên món ăn của bạn là gì nhỉ?"
+                  name="name"
+                  value={recipe.name}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+
+              {/* Mô tả món ăn */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Hãy chia sẻ một vài suy nghĩ của bạn ở đây nha"
+                  name="description"
+                  value={recipe.description}
+                  onChange={handleChange}
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                />
+              </Grid>
+
+              {/* Khẩu phần */}
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Khẩu phần"
+                  name="portion"
+                  value={recipe.portion}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+
+              {/* Thời gian nấu */}
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Thời gian nấu (phút)"
+                  name="cookingTime"
+                  value={recipe.cookingTime}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+
+              {/* Nguyên Liệu */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Nguyên liệu"
+                  name="ingredients"
+                  value={recipe.ingredients}
+                  onChange={handleChange}
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                />
+              </Grid>
+
+              {/* các bước Làm */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Các bước làm"
+                  name="steps"
+                  value={recipe.steps}
+                  onChange={handleChange}
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                />
+              </Grid>
+
+              {/* Tự đánh giá điểm của món ăn */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Tự đánh giá điểm của món ăn trên"
+                  name="coreMonAn"
+                  value={recipe.coreMonAn}
+                  onChange={handleChange}
+                  variant="outlined"
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: '45%', backgroundColor: '#33CC33' }}
+                >
+                  Đăng
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  sx={{ width: '45%' }}
+                  onClick={handleReset}
+                >
+                  Xóa
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
       </Box>
-
-      <form onSubmit={handleSubmit}>
-         {/* Danh muc mon an */}
-        <FormControl sx={{ m: 1, width:'400px' }} size="big">
-          <InputLabel variant='outlined' id="demo-select-small-label">Danh mục món ăn</InputLabel>
-          <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
-            value={danhMuc}
-            label="Danh mục"
-            onChange={handleChangeDanhMuc}
-          >
-            <MenuItem value='chay'>Chay</MenuItem>
-            <MenuItem value='mặn'>Mặn</MenuItem>
-            <MenuItem value='bánh'>Bánh</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* tên món ăn */}
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Tên món ăn của bạn là gì nhỉ?"
-              name="name"
-              value={recipe.name}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          </Grid>
-
-          {/* Mô tả món ăn */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Hãy chia sẻ một vài suy nghĩ của bạn ở đây nha"
-              name="description"
-              value={recipe.description}
-              onChange={handleChange}
-              variant="outlined"
-              multiline
-              rows={3}
-            />
-          </Grid>
-
-          {/* Khẩu phần */}
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Khẩu phần"
-              name="portion"
-              value={recipe.portion}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          </Grid>
-
-          {/* Thời gian nấu */}
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Thời gian nấu (phút)"
-              name="cookingTime"
-              value={recipe.cookingTime}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          </Grid>
-
-          {/* Nguyên Liệu */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Nguyên liệu"
-              name="ingredients"
-              value={recipe.ingredients}
-              onChange={handleChange}
-              variant="outlined"
-              multiline
-              rows={4}
-            />
-          </Grid>
-
-          {/* các bước Làm */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Các bước làm"
-              name="steps"
-              value={recipe.steps}
-              onChange={handleChange}
-              variant="outlined"
-              multiline
-              rows={4}
-            />
-          </Grid>
-
-          {/* Tự đánh giá điểm của món ăn */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Tự đánh giá điểm của món ăn trên"
-              name="coreMonAn"
-              value={recipe.coreMonAn}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          </Grid>
-
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ width: '45%', backgroundColor: '#33CC33' }}
-            >
-              Đăng
-            </Button>
-
-            <Button
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteIcon />}
-              sx={{ width: '45%' }}
-              onClick={handleReset}
-            >
-              Xóa
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
     </Container>
   )
 }

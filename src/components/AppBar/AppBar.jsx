@@ -11,7 +11,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import Profiles from '~/pages/Profile/Profiles'
+import Profiles from '~/components/AppBar/Menu/Profiles'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
@@ -19,12 +19,14 @@ import CloseIcon from '@mui/icons-material/Close'
 
 import ResponsiveAppBar from './Menu/Menu'
 import AddIcon from '@mui/icons-material/Add'
+import { jwtDecode } from 'jwt-decode'
 
 function AppBar() {
 
   const [searchValue, setSearchValue] = useState('')
   const coreUser = localStorage.getItem('token')
-  const core = coreUser.coreUser
+  const coreUserJWTDecode = jwtDecode(coreUser)
+  console.log(coreUserJWTDecode)
   return (
     <Box sx={{
       height:(theme) => theme.trello. appBarHeight,
@@ -53,7 +55,7 @@ function AppBar() {
       <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
         {/* <Button sx={{ border:'1px solid' }} variant="contained" startIcon = {<AddIcon/>} >Viết món mới</Button> */}
         <Box sx={{ border:'1px solid white', height:'35px', width:'100px' }}>
-          <Typography sx={{ color:'white', textAlign:'center', marginTop:'5px' }}>{coreUser} điểm</Typography>
+          <Typography sx={{ color:'white', textAlign:'center', marginTop:'5px' }}>{coreUserJWTDecode.coreUser} điểm</Typography>
         </Box>
         {/* <TextField id="outlined-basic"
           label="Search....."
