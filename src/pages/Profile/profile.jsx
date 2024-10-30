@@ -1,7 +1,5 @@
 
 
-
-
 import { Box, Typography, TextField, RadioGroup, Radio, FormControlLabel, Button, Avatar, Paper } from '@mui/material'
 
 import AppBar from '~/components/AppBar/AppBar'
@@ -9,16 +7,55 @@ import Container from '@mui/material/Container'
 
 
 import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
+import { useEffect, useState } from 'react'
+import { Password } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
+
 
 function ProfilePage() {
   const HEIGHT_AD = '200PX'
 
+  const [data, setProfile] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
+  const handleChinhSua = () => {
 
+  }
+  const handleDoiMatKhau = () => {
 
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await fetch('http://localhost:3000/trang-ca-nhan', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.message)
+        }
+        const result = await response.json()
+        setProfile(result)
+        console.log(result)
+      } catch (error) {
+        console.error('Lỗi lấy dữ liệu:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  if (isLoading) {
+    return <div>Loading....</div>
+  }
 
   return(
-      <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
+    <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
       <AppBar />
 
       <Box sx={{
@@ -52,37 +89,37 @@ function ProfilePage() {
             <Box flexGrow={1} p={4}>
               <Paper elevation={3} sx={{ padding: 4, maxWidth: 800, margin: 'auto' }}>
                 <Box display="flex" alignItems="center" mb={4}>
-                  <Avatar sx={{ width: 60, height: 60, mr: 2 }} />
-                  <Typography variant="h5">Tên tài khoản</Typography>
+                  <Avatar sx={{ width: 60, height: 60, mr: 2 }} src='src/image/BackgroundLogin/backGroundLogin.jpg' />
+                  <Typography variant="h5">{data.fullName}</Typography>
                   <Box ml={2} p={1} bgcolor="pink" borderRadius={1}>
-                    <Typography>50 điểm</Typography>
+                    <Typography>{data.core} điểm</Typography>
                   </Box>
                 </Box>
 
                 <Box display="flex" justifyContent="space-between">
-                  <TextField label="Họ và tên" variant="outlined" fullWidth sx={{ mb: 2, mr: 2 }} />
-                  <TextField label="User Name" variant="outlined" fullWidth sx={{ mb: 2 }} />
+                  <TextField variant="outlined" label = 'Họ và tên' fullWidth sx={{ mb: 2, mr: 2 }} value={data.fullName} />
+                  <TextField variant="outlined" label = 'Username ' fullWidth sx={{ mb: 2 }} value={data.username} />
                 </Box>
                 <Box display="flex" justifyContent="space-between">
-                  <TextField label="Năm sinh" variant="outlined" fullWidth sx={{ mb: 2, mr: 2 }} />
-                  <TextField label="Mật khẩu" type="password" variant="outlined" fullWidth sx={{ mb: 2 }} />
+                  <TextField value={data.birthYear} label = 'Năm sinh' variant="outlined" fullWidth sx={{ mb: 2, mr: 2 }} />
+                  <TextField value={data.password} label = 'Password' type="password" variant="outlined" fullWidth sx={{ mb: 2 }} />
                 </Box>
-                <Box display="flex" justifyContent="space-between">
+                <Box justifyContent="space-between">
                   <RadioGroup row>
-                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                    <FormControlLabel value="other" control={<Radio />} label="Khác" />
+                    <FormControlLabel value = {data.gender} control={<Radio />} label={data.gender} checked />
                   </RadioGroup>
-                  <TextField label="Gmail" variant="outlined" fullWidth sx={{ mb: 2 }} />
+                  <TextField value={data.email} label = 'Email' variant="outlined" fullWidth sx={{ mb: 2 }} />
                 </Box>
                 <Box mt={2}>
                   <Typography variant="body2" color="primary" sx={{ textDecoration: 'underline', cursor: 'pointer' }}>
-                    Xem danh sách những món đã đăng
+                    <Link to={'/mon-cua-toi'}> Xem danh sách các món đã đăng </Link>
                   </Typography>
                 </Box>
-
-                <Button variant="contained" color="primary" sx={{ mt: 4 }}>
+                <Button variant="contained" color="primary" sx={{ mt: 4, mr:4 }} onClick = { handleChinhSua }>
                   Chỉnh sửa
+                </Button>
+                <Button variant="contained" color="primary" sx={{ mt: 4 }} onClick={ handleDoiMatKhau}>
+                  Đổi mật khẩu
                 </Button>
               </Paper>
             </Box>
@@ -93,4 +130,4 @@ function ProfilePage() {
   )
 }
 
-export default ProfilePage;
+export default ProfilePage

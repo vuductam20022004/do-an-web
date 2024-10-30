@@ -5,14 +5,12 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
 
-import authenticateUerToken from '../pages/Auth/authenticateUserToken.js'
-
+import authenticateUerToken from './pages/Auth/authenticateUserToken.js'
 
 
 const app = express()
 app.use(cors())
 
-// app.use(bodyParser.json())
 
 // Cấu hình kết nối tới SQL Server
 const dbConfig = {
@@ -35,8 +33,11 @@ sql.connect(dbConfig)
     console.error('Lỗi kết nối: ', err)
   })
 
+
 // Route mẫu
-app.listen(3000, () => {
+// const localIP = '192.168.1.53'
+const port = 3000
+app.listen(port, () => {
   console.log('Server đang chạy trên cổng 3000')
 })
 
@@ -260,6 +261,23 @@ app.get('/mon-da-luu', authenticateUerToken, async (req, res) => {
 join monAn on luuMonAn.idMonAn = monAn.ID
 where luuMonAn.userId = ${userId}`)
     res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+
+//API LẤY THÔNG TIN CỦA CÁ NHÂN VỚI ID ĐƯỢC LƯU Ở sTORAGE
+app.get('/trang-ca-nhan', authenticateUerToken, async (req, res) => {
+  try {
+    console.log('ok')
+    const userId = req.userIdAuthen
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request().query(`select * from users where users.ID = ${userId}`)
+    console.log(result)
+
+    res.json(result.recordset[0]) // Trả về kết quả
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
     res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client

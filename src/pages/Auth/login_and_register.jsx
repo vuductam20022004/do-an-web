@@ -39,7 +39,7 @@ function AuthPage() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundImage: 'url("https://bloganchoi.com/wp-content/uploads/2020/06/du-lich-nui-rung-tay-bac-1.jpg")',
+        backgroundImage: 'url("src/image/BackgroundLogin/backGroundLogin.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -55,6 +55,7 @@ function AuthPage() {
           maxWidth: 400,
           width: '100%',
           bgcolor: '#66FFCC',
+          // bgcolor: '',
           justifyContent: 'center'
 
         }}
@@ -85,6 +86,7 @@ function LoginForm({ handleToggle }) {
         localStorage.setItem('token', response.data.token)
         //Lưu token vào localStorage của Client
         navigate('/board')//Điều hướng
+        console.log(response.data.token)
 
       } else {
         alert('Invalid credentials')
@@ -116,8 +118,8 @@ function LoginForm({ handleToggle }) {
         fullWidth
         sx={{
           mt: 2,
-          bgcolor: '#f48fb1',
-          '&:hover': { bgcolor: '#f06292' }
+          background:'#33CC00',
+          '&:hover': { bgcolor: '' }
         }}
         onClick={handleLogin}
       >
@@ -213,6 +215,7 @@ function RegisterForm({ handleToggle }) {
         sx={{
           mt: 2,
           bgcolor: '#f48fb1',
+          // bgcolor: 'pink',
           '&:hover': { bgcolor: '#f06292' }
         }}
         onClick={handleRegister}

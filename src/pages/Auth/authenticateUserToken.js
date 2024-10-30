@@ -14,6 +14,7 @@ const authenticateUserToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, secretKey)
     req.userIdAuthen = decoded.userId // Lưu userId vào request để sử dụng ở các hàm sau
+    req.userCoreAuthen = decoded.coreUser
     next()
   } catch (error) {
     res.status(401).json({ success: false, message: 'Unauthorized access' })

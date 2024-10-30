@@ -25,6 +25,9 @@ function Recent() {
   const handleTrangCaNhan = () => {
     navigate('/trang-ca-nhan')
   }
+  const handleLogOut = () => {
+    navigate('/')
+  }
   return (
     <Box>
       <Tooltip title="Account settings">
@@ -38,7 +41,7 @@ function Recent() {
         >
           <Avatar
             alt="DucTamdev"
-            src="https://img1.kienthucvui.vn/uploads/2021/12/30/anh-que-huong-viet-nam-dep-nhat_082306409.jpg" 
+            src="src/image/BackgroundLogin/backGroundLogin.jpg"
             sx={{ width: 36, height: 36 }}/>
         </IconButton>
       </Tooltip>
@@ -51,11 +54,11 @@ function Recent() {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        <MenuItem onClick={handleTrangCaNhan} >
+        <MenuItem onClick = {handleTrangCaNhan} >
           <Avatar sx={{ width:28, height:28, mr:2 }} /> Profile
         </MenuItem>
         <Divider />
-        <MenuItem >
+        <MenuItem onClick = {handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

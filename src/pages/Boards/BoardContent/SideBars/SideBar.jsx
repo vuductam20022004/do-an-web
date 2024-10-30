@@ -16,12 +16,16 @@ import { useNavigate } from 'react-router-dom'
 
 // Biểu tượng và tên thương hiệu ở trên cùng
 const BrandLogo = () => {
+  const navigate = useNavigate()
+  const handleLogo = () => {
+    navigate('/board')
+  }
   return (
-    <ListItem>
+    <ListItem onClick={ handleLogo }>
       <ListItemIcon>
-        <Avatar src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Logo" />
+        <Avatar src="src/image/Logo/logo.jpg" alt="Logo" sx={{ width: 80, height: 80, mr: 2, cursor:'pointer' }} />
       </ListItemIcon>
-      <Typography variant="h6" color="primary">Tên Bếp</Typography>
+      <Typography variant="h9" color='white'>Ngoan Xinh Yêu Bếp</Typography>
     </ListItem>
   )
 }

@@ -26,7 +26,6 @@ function AppBar() {
   const [searchValue, setSearchValue] = useState('')
   const coreUser = localStorage.getItem('token')
   const coreUserJWTDecode = jwtDecode(coreUser)
-  console.log(coreUserJWTDecode)
   return (
     <Box sx={{
       height:(theme) => theme.trello. appBarHeight,
@@ -42,8 +41,9 @@ function AppBar() {
       <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
         <AppsIcon sx={{ color:'white' }}/>
         <Box sx={{ display:'flex', alignItems:'center', gap:0.5 }}>
-          <SvgIcon component={trelloIcon} fontSize ="small" inheritViewBox sx={{ color:'white' }}/>
-          <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'white' }}>Bếp</Typography>
+          {/* <SvgIcon component={trelloIcon} fontSize ="small" inheritViewBox sx={{ color:'white' }}/> */}
+          {/* <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'white' }}>Bếp</Typography> */}
+          <img src="src/image/Logo/logo2.jpg" alt="" />
         </Box>
         <Box sx={{ display:{ xs: 'none', md:'flex' }, gap: 1 }}>
           <ResponsiveAppBar />
@@ -57,42 +57,6 @@ function AppBar() {
         <Box sx={{ border:'1px solid white', height:'35px', width:'100px' }}>
           <Typography sx={{ color:'white', textAlign:'center', marginTop:'5px' }}>{coreUserJWTDecode.coreUser} điểm</Typography>
         </Box>
-        {/* <TextField id="outlined-basic"
-          label="Search....."
-          type="text"
-          size='small'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'white' }}/>
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <CloseIcon
-                fontSize='small'
-                sx={{
-                  color:'white',
-                  cursor:'pointer'
-                }}
-                onClick = {(e) => setSearchValue('')}
-              />
-            )
-          }}
-          sx={{
-            minWidth: '120px',
-            maxWidth: '180px',
-            '& label':{ color:'white' },
-            '& input':{ color:'white' },
-            '& label.Mui-focused':{ color:'white' },
-            '& .MuiOutlinedInput-root':{
-              '& fieldset': { borderColor: 'white' },
-              '&:hover fieldset': { borderColor: 'white' },
-              '&.Mui-focused fieldset': { borderColor: 'white' }
-            }
-          }}
-        /> */}
 
         <ModeSelect> </ModeSelect>
         <Tooltip title="Notifications">

@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       {/* <AuthPage /> */}
       <Router>
         <Routes>
-          <Route path='' element = {<AuthPage />}/>
+          <Route path='/' element = {<AuthPage />}/>
           {/* <Route path="/board" element={<App />} /> */}
           <Route path="/board" element={<Board />} />
           <Route path="/add-new-mon/them_mon_moi" element={<AddNewRecipe />} />
