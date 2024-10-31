@@ -4,6 +4,8 @@ import express from 'express'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 import authenticateUerToken from './pages/Auth/authenticateUserToken.js'
 
@@ -32,6 +34,10 @@ sql.connect(dbConfig)
   .catch(err => {
     console.error('Lỗi kết nối: ', err)
   })
+
+
+
+
 
 
 // Route mẫu
@@ -159,23 +165,41 @@ app.post('/register', async (req, res) => {
 
 
 // Cấu hình multer để xử lý file upload
-const storage = multer.memoryStorage()
+// const storage = multer.memoryStorage()
+// const upload = multer({ storage })
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+app.use('/src/image/monAn', express.static(path.join(__dirname, 'src/image/monAn')))
+// Cấu hình multer để lưu file ảnh vào thư mục "uploads"
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'src/image/monAn/') // Đường dẫn thư mục lưu ảnh
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const fileExtension = path.extname(file.originalname)
+    const fileName = `${file.fieldname}-${uniqueSuffix}${fileExtension}`
+    cb(null, fileName)
+  }
+})
+
+
+
 const upload = multer({ storage })
 
 
 app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image'), async (req, res) => {
   const { danhMuc, name, description, portion, cookingTime, ingredients, steps, coreMonAn } = req.body
   const userId = req.userIdAuthen // Lấy userId đã xác thực từ middleware
-  console.log('ok')
-
   try {
     // Kết nối đến SQL Server
     const pool = await sql.connect()
 
     // Nếu có file ảnh thì xử lý ảnh ở đây (nếu bạn lưu ảnh vào cơ sở dữ liệu)
-    let image = null
+    let imagePath = null
     if (req.file) {
-      image = req.file.buffer // Lấy buffer của file để lưu vào cơ sở dữ liệu (nếu cần)
+      imagePath = `src/image/monAn/${req.file.filename}`//đường dẫn lưu vào db
     }
 
     // Thực hiện truy vấn để thêm món ăn mới
@@ -192,7 +216,7 @@ app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image
       .input('ingredients', sql.NVarChar, ingredients)
       .input('steps', sql.NVarChar, steps)
       .input('coreMonAn', sql.Int, coreMonAn)
-      .input('image', sql.VarBinary, image)
+      .input('image', sql.NVarChar, imagePath)
       .input('userId', sql.Int, userId)
       .query(query)
 
@@ -202,6 +226,9 @@ app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image
     res.status(500).json({ success: false, message: 'Server error' })
   }
 })
+
+
+
 
 
 

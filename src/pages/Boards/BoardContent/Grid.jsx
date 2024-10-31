@@ -94,7 +94,7 @@ const RecipeGrid = () => {
               <CardMedia
                 component="img"
                 height="140"
-                image="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg"
+                image={item.image}
                 alt={item.image}
               />
               <CardContent>

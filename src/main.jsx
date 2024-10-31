@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path='/' element = {<AuthPage />}/>
           {/* <Route path="/board" element={<App />} /> */}
           <Route path="/board" element={<Board />} />
-          <Route path="/add-new-mon/them_mon_moi" element={<AddNewRecipe />} />
+          <Route path="/them_mon_moi" element={<AddNewRecipe />} />
           <Route path="/chitietmonan/:ID" element={< RecipeDetail />} />
           <Route path="/mon-cua-toi" element = {< MonCuaToi /> } />
           <Route path="/mon-da-luu" element = {< MonDaLuu /> } />

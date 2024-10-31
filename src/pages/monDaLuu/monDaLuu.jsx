@@ -87,8 +87,8 @@ function MonDaLuu() {
                       <CardMedia
                         component="img"
                         height="140"
-                        image="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg"
-                        alt={item.image}
+                        image={item.image}
+                        alt='Ảnh Của Món Đã Lưu'
                       />
                       <CardContent>
                         <Typography variant="h6">{item.name}</Typography>

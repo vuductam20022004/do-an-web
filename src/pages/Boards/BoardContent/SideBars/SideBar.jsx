@@ -35,7 +35,7 @@ const SideBar = () => {
   const navigate = useNavigate()
 
   const handleClickThemMonMoi = () => {
-    navigate('/add-new-mon/them_mon_moi')
+    navigate('/them_mon_moi')
   }
 
   const handleClickMonCuaToi = () => {

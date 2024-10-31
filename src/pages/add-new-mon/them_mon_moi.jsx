@@ -21,8 +21,7 @@ import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
 
 import { useNavigate } from 'react-router-dom'
 
-
-
+import { useEffect } from 'react'
 
 
 const AddNewRecipe = () => {
@@ -113,19 +112,25 @@ const AddNewRecipe = () => {
   const [preview, setPreview] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0]
+    console.log(file)
     if (file) {
       setSelectedFile(file) // Lưu file để gửi lên server
+      console.log('ok')
 
       // Tạo URL tạm thời để hiển thị ảnh
       setPreview(URL.createObjectURL(file))
     }
   }
+  useEffect(() => {
+    if (selectedFile) {
+      console.log('File đã chọn:', selectedFile)
+    }
+  }, [selectedFile])
 
   //Danh  mucj mon an
   const [danhMuc, setDanhMuc] = useState('')
-  const HEIGHT_AD = '200PX'
   const handleChangeDanhMuc = (event) => {
     setDanhMuc(event.target.value)
   }
@@ -137,8 +142,6 @@ const AddNewRecipe = () => {
         display:'flex',
         height:(theme) => theme.trello - theme.trello.appBarHeight,
         overflowY:'hidden'
-
-
       }}>
         <Box sx={{
           bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
@@ -147,6 +150,7 @@ const AddNewRecipe = () => {
           p: '10px 0'
         }}>
           <SideBar />
+
         </Box>
 
         <Box maxWidth="md" sx={{

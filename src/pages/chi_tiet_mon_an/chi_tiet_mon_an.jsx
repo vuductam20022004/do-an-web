@@ -89,9 +89,8 @@ console.log(recipe)
 
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <img src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="anhChiTietTungMon"
+        <img src = {`../${recipe.image}`} alt='Ảnh chi tiết món ăn'
           height='300px'/>
-   
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
