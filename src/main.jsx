@@ -19,7 +19,7 @@ import Board from '~/pages/Boards/_id.jsx'
 import MonCuaToi from '~/pages/monCuaToi/monCuaToi.jsx'
 import MonDaLuu from '~/pages/monDaLuu/monDaLuu.jsx'
 import ProfilePage from '~/pages/Profile/profile.jsx'
-
+import Search from '~/pages/search/search.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -38,6 +38,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/mon-cua-toi" element = {< MonCuaToi /> } />
           <Route path="/mon-da-luu" element = {< MonDaLuu /> } />
           <Route path="/trang-ca-nhan" element = {< ProfilePage /> } />
+          <Route path="/search" element = {<Search /> } />
 
         </Routes>
       </Router>

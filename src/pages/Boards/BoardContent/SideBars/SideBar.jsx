@@ -11,6 +11,7 @@ import HomeIcon from '@mui/icons-material/Home'
 import AddIcon from '@mui/icons-material/Add'
 import PersonIcon from '@mui/icons-material/Person'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 //  import {} from '~/pages/Boards/BoardContent/add-new-mon/them_mon_moi'
 
 
@@ -29,6 +30,8 @@ const BrandLogo = () => {
     </ListItem>
   )
 }
+
+
 
 const SideBar = () => {
 
@@ -50,6 +53,10 @@ const SideBar = () => {
 
   const [searchValue, setSearchValue] = useState('')
 
+  //làm chức năng search dùng useEffect khi có sự thay đổi của searchValue
+  const handleTimKiem = () => {
+    navigate(`/search?query=${encodeURIComponent(searchValue)}`)
+  }
   return (
     <Box>
       <List>
@@ -76,10 +83,11 @@ const SideBar = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'white' }}/>
+                  <SearchIcon sx={{ color: 'white', cursor:'pointer' }} onClick = {handleTimKiem}/>
                 </InputAdornment>
               ),
               endAdornment: (
+
                 <CloseIcon
                   fontSize='small'
                   sx={{
@@ -90,6 +98,7 @@ const SideBar = () => {
                 />
               )
             }}
+            
             sx={{
               minWidth: '120px',
               maxWidth: '180px',

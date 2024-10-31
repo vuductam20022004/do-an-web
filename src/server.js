@@ -164,9 +164,6 @@ app.post('/register', async (req, res) => {
 //API THÊM MÓN MỚI
 
 
-// Cấu hình multer để xử lý file upload
-// const storage = multer.memoryStorage()
-// const upload = multer({ storage })
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -184,10 +181,7 @@ const storage = multer.diskStorage({
   }
 })
 
-
-
 const upload = multer({ storage })
-
 
 app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image'), async (req, res) => {
   const { danhMuc, name, description, portion, cookingTime, ingredients, steps, coreMonAn } = req.body
@@ -226,11 +220,6 @@ app.post('/add-new-mon/them_mon_moi', authenticateUerToken, upload.single('image
     res.status(500).json({ success: false, message: 'Server error' })
   }
 })
-
-
-
-
-
 
 
 //API XEm TẤT CẢ CÁC MÓN CỦA TÔI
@@ -308,5 +297,30 @@ app.get('/trang-ca-nhan', authenticateUerToken, async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
     res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+
+
+//API TÌM KIẾM
+app.get('/search', async (req, res) => {
+  const searchValue = req.query.q //Lấy từ URL
+
+  try {
+    const pool = await sql.connect()
+    const query = `
+      SELECT * FROM monAn 
+      WHERE name LIKE '%' + @searchValue + '%' 
+      OR moTa LIKE '%' + @searchValue + '%'
+    `
+
+    const result = await pool.request()
+      .input('searchValue', sql.NVarChar, searchValue)
+      .query(query)
+
+    res.json(result.recordset)
+  } catch (error) {
+    console.error('Error searching recipes:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 })
