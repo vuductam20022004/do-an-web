@@ -30,15 +30,36 @@ const Search = () => {
       fetchSearchResults()
     } else {
       setSearchResults([])
-      return <div>Không có kết quả </div>
     }
   })
 
-  if (!data) {
-    return <div> Không có kết quả muốn tìm kiếm</div>
+  if (data.length === 0) {
+    return (
+      <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
+        <AppBar />
+        <Box sx={{
+          display:'flex'
+        }}>
+          <Box sx={{
+            bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
+            height:(theme) => theme.trello.boardContentHeight,
+            width:'15% ',
+            p: '10px 0'
+          }}>
+            <SideBar />
+          </Box>
+          <Box sx={{
+            bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
+            height:(theme) => theme.trello.boardContentHeight,
+            width:'85% ',
+            p: '10px 15px',
+            overflow: 'auto'
+          }}> Không có kết quả tìm kiếm
+          </Box>
+        </Box>
+      </Container>
+    )
   }
-
-
   return (
     <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
       <AppBar />

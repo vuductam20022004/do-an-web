@@ -23,15 +23,35 @@ import axios from 'axios'
 
 
 function RecipeDetail() {
+  const { ID } = useParams()
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState([{ username: 'Tên tài khoản', content: 'Nội dung bình luận' }])
 
-  const handleAddComment = () => {
-    setComments([...comments, { username: 'Tên tài khoản', content: comment }])
-    setComment('')
+  const handleAddComment = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      console.log(ID)
+      console.log(comment)
+      const response = await axios.post('http://localhost:3000/binh-luan', { ID, comment }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      if (response.data.success) {
+        alert('Bình luận Thành Công')
+        setComments([...comments, { username: 'Tên tài khoản', content: comment }])
+        setComment('')
+      } else {
+        alert(response.data.message)
+      }
+    } catch (error) {
+      console.error('Đăng ký lỗi:', error)
+      alert('Bình Luận lỗi')
+    }
+
   }
 
-  const { ID } = useParams()
+  // const { ID } = useParams()
   // console.log(ID)
   const [recipe, setRecipe] = useState(null)
 
@@ -143,7 +163,7 @@ console.log(recipe)
 
       <Divider sx={{ my: 3 }} />
       <Box>
-        <Typography variant="h6">Bình luận ({comments.length})</Typography>
+        <Typography variant="h6">Bình luận (6)</Typography>
         <List>
           {comments.map((comment, index) => (
             <ListItem key={index}>

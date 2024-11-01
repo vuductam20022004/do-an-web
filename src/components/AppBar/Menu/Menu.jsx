@@ -37,7 +37,7 @@ function ResponsiveAppBar() {
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1,
             display: { xs: 'flex', md: 'none' },
-            bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0')
+            bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0')//
           }}>
             <IconButton
               size="large"

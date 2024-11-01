@@ -324,3 +324,35 @@ app.get('/search', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 })
+
+
+//API Bình Luận
+app.post('/binh-luan', authenticateUerToken, async (req, res) => {
+  try {
+    const idMonAn = req.body.ID
+    const comment = req.body.comment
+    const userId = req.userIdAuthen // Lấy id user
+
+    // Kết nối đến SQL Server
+    await sql.connect()
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = `
+      INSERT INTO binhLuan (idMonAn, userId, comment)
+      VALUES (@idMonAn, @userId, @comment )
+    `
+
+    // Tạo request mới và thêm các input
+    const insertRequest = new sql.Request()
+    insertRequest.input('idMonAn', sql.Int, idMonAn)
+    insertRequest.input('userId', sql.Int, userId)
+    insertRequest.input('comment', sql.NVarChar, comment)
+
+    // Thực hiện câu lệnh insert
+    await insertRequest.query(query)
+
+    res.status(201).json({ success: true, message: 'Bình Luận thành công' })
+  } catch (error) {
+    console.error('Error during Bình Luận:', error)
+    res.status(500).json({ success: false, message: 'Lỗi trong quá trình bình luận' })
+  }
+})
