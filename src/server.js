@@ -68,9 +68,16 @@ app.get('/chitietmonan/:id', authenticateUerToken, async (req, res) => {
   const { id } = req.params// Lấy id từ params URL
   try {
     // Tạo một truy vấn để lấy chi tiết món ăn từ SQL Server
-    const result = await sql.query`SELECT * FROM monAn WHERE id = ${id} `
+    const result = await sql.query`select 
+t.ID, [name], moTa, nguyenLieu, step, khauPhan, timeNau, [image], t.core, 
+timePost,binhLuan.ID as IDbinhLuan, binhLuan.userId,danhMuc, idMonAn, comment, users.fullName
+from(
+	select * from monAn
+	where monAn.ID = ${ id }) as t LEFT join binhLuan on t.ID = binhLuan.idMonAn
+	left join users on binhLuan.userId = users.ID `
+
     if (result.recordset.length > 0) {
-      res.json(result.recordset[0])// Trả về dữ liệu chi tiết món ăn nếu tìm thấy
+      res.json(result.recordset)// Trả về dữ liệu chi tiết món ăn nếu tìm thấy
     } else {
       res.status(404).json({ message: 'Món ăn không tồn tại' })
     }
@@ -102,8 +109,9 @@ app.post('/login', async (req, res) => {
     }
     const userId = result.recordset[0].ID
     const coreUser = result.recordset[0].core
+    const fullNameUser = result.recordset[0].fullName
     //Tạo token
-    const token = jwt.sign({ userId, coreUser }, secretKey, { expiresIn: '1h' })
+    const token = jwt.sign({ userId, coreUser, fullNameUser }, secretKey, { expiresIn: '1h' })
 
 
     // Send the token and success response
@@ -164,14 +172,12 @@ app.post('/register', async (req, res) => {
 //API THÊM MÓN MỚI
 
 
-
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 app.use('/src/image/monAn', express.static(path.join(__dirname, 'src/image/monAn')))
-// Cấu hình multer để lưu file ảnh vào thư mục "uploads"
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'src/image/monAn/') // Đường dẫn thư mục lưu ảnh
+    cb(null, 'src/image/monAn/') // Đường dẫn thư mục lưu ảnh,/Cấu hình multer để lưu file ảnh vào thư mục "uploads"
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)

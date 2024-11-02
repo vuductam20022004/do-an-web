@@ -20,12 +20,16 @@ import { useEffect } from 'react'
 import { red } from '@mui/material/colors'
 
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+
 
 
 function RecipeDetail() {
   const { ID } = useParams()
   const [comment, setComment] = useState('')
-  const [comments, setComments] = useState([{ username: 'Tên tài khoản', content: 'Nội dung bình luận' }])
+  const [comments, setComments] = useState([])
+  const fullNameUser = localStorage.getItem('token')
+  const nameUserJWTDecode = jwtDecode(fullNameUser)
 
   const handleAddComment = async () => {
     try {
@@ -38,9 +42,10 @@ function RecipeDetail() {
         }
       })
       if (response.data.success) {
-        alert('Bình luận Thành Công')
-        setComments([...comments, { username: 'Tên tài khoản', content: comment }])
+        // alert('Bình luận Thành Công')
+        setComments([...comments, { fullName: nameUserJWTDecode.fullNameUser, comment: comment }])
         setComment('')
+
       } else {
         alert(response.data.message)
       }
@@ -51,8 +56,6 @@ function RecipeDetail() {
 
   }
 
-  // const { ID } = useParams()
-  // console.log(ID)
   const [recipe, setRecipe] = useState(null)
 
   //Click button Luu Mon
@@ -88,8 +91,10 @@ function RecipeDetail() {
           }
         })
         const data = await response.json()
-        // console.log(data)
-        setRecipe(data)
+        console.log(data)
+        setRecipe(data[0])
+        setComments(data)
+        console.log(comments)
         // Cập nhật state với dữ liệu món ăn
       } catch (error) {
         console.error('Lỗi khi lấy chi tiết món ăn:', error)
@@ -165,14 +170,14 @@ console.log(recipe)
       <Box>
         <Typography variant="h6">Bình luận (6)</Typography>
         <List>
-          {comments.map((comment, index) => (
-            <ListItem key={index}>
+          {comments.map(item => (
+            <ListItem key={item.IDbinhLuan}>
               <ListItemAvatar>
-                <Avatar alt={comment.username} />
+                <Avatar alt={item.fullName} />
               </ListItemAvatar>
               <ListItemText
-                primary={comment.username}
-                secondary={comment.content}
+                primary={item.fullName}
+                secondary={item.comment}
               />
             </ListItem>
           ))}
