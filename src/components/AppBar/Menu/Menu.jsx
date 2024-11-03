@@ -9,35 +9,37 @@ import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
+import { useNavigate } from 'react-router-dom'
+
+
 
 const pages = ['Chay', 'Mặn', 'Bánh', 'ok']
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
-  const [anchorElUser, setAnchorElUser] = React.useState(null)
+  const navigate = useNavigate()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget)
-  }
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget)
   }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
   }
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
+  const handleMenuItemClick = async (page) => {
+
+    navigate(`/searchDanhMuc?query=${encodeURIComponent(page)}`)
   }
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl" sx={{ bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0')}}>
+      <Container maxWidth="xl" sx={{ bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0') }}>
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1,
+          <Box sx={{
+            flexGrow: 1,
             display: { xs: 'flex', md: 'none' },
-            bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0')//
+            bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
           }}>
             <IconButton
               size="large"
@@ -66,18 +68,22 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleMenuItemClick(page)}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0') } }}>
+          <Box sx={{
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' },
+            bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
+          }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#2c3e50' : '#1565c0') }}
+                onClick={() => handleMenuItemClick(page)}
+                sx={{ my: 2, color: 'white', display: 'block', bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0') }}
               >
                 {page}
               </Button>
@@ -88,4 +94,5 @@ function ResponsiveAppBar() {
     </AppBar>
   )
 }
+
 export default ResponsiveAppBar

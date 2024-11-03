@@ -36,10 +36,6 @@ sql.connect(dbConfig)
   })
 
 
-
-
-
-
 // Route mẫu
 // const localIP = '192.168.1.53'
 const port = 3000
@@ -293,11 +289,9 @@ where luuMonAn.userId = ${userId}`)
 //API LẤY THÔNG TIN CỦA CÁ NHÂN VỚI ID ĐƯỢC LƯU Ở sTORAGE
 app.get('/trang-ca-nhan', authenticateUerToken, async (req, res) => {
   try {
-    console.log('ok')
     const userId = req.userIdAuthen
     const pool = await sql.connect(dbConfig)
     const result = await pool.request().query(`select * from users where users.ID = ${userId}`)
-    console.log(result)
 
     res.json(result.recordset[0]) // Trả về kết quả
   } catch (err) {
@@ -360,5 +354,23 @@ app.post('/binh-luan', authenticateUerToken, async (req, res) => {
   } catch (error) {
     console.error('Error during Bình Luận:', error)
     res.status(500).json({ success: false, message: 'Lỗi trong quá trình bình luận' })
+  }
+})
+
+//API lọc món ăn theo danh mục
+app.get('/searchDanhMuc', async (req, res) => {
+  const searchValue = req.query.q //Lấy từ URL
+  try {
+    const pool = await sql.connect()
+    const query = 'select * from monAn where danhMuc = @searchValue'
+
+    const result = await pool.request()
+      .input('searchValue', sql.NVarChar, searchValue )
+      .query(query)
+
+    res.json(result.recordset)
+  } catch (error) {
+    console.error('Error searching recipes(DanhMuc):', error)
+    res.status(500).json({ success: false, message: 'Server error' })
   }
 })
