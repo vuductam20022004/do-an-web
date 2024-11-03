@@ -86,7 +86,6 @@ function LoginForm({ handleToggle }) {
         localStorage.setItem('token', response.data.token)
         //Lưu token vào localStorage của Client
         navigate('/board')//Điều hướng
-        console.log(response.data.token)
 
       } else {
         alert('Invalid credentials')

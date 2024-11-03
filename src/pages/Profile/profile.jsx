@@ -40,7 +40,6 @@ function ProfilePage() {
         }
         const result = await response.json()
         setProfile(result)
-        console.log(result)
       } catch (error) {
         console.error('Lỗi lấy dữ liệu:', error)
       } finally {

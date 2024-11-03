@@ -67,7 +67,6 @@ const AddNewRecipe = () => {
 
     try {
       const token = localStorage.getItem('token') // Lấy token từ localStorage
-      console.log(token)
       const response = await fetch('http://localhost:3000/add-new-mon/them_mon_moi', {
         method: 'POST',
         headers: {
@@ -91,8 +90,8 @@ const AddNewRecipe = () => {
     } catch (error) {
       console.error('Error adding recipe:', error)
     }
-    console.log(recipe)
-    console.log(danhMuc)
+    // console.log(recipe)
+    // console.log(danhMuc)
   }
 
   const handleReset = () => {
@@ -114,10 +113,8 @@ const AddNewRecipe = () => {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0]
-    console.log(file)
     if (file) {
       setSelectedFile(file) // Lưu file để gửi lên server
-      console.log('ok')
 
       // Tạo URL tạm thời để hiển thị ảnh
       setPreview(URL.createObjectURL(file))

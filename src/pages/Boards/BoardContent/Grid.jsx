@@ -79,7 +79,6 @@ const RecipeGrid = () => {
     fetch('http://localhost:3000/board/all')
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         setMonAns(data)// Giả sử bạn đã định nghĩa setUsers để lưu dữ liệu
       })
       .catch(error => console.error('Error:', error))

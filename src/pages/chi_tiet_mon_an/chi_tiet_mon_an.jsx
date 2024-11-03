@@ -34,8 +34,6 @@ function RecipeDetail() {
   const handleAddComment = async () => {
     try {
       const token = localStorage.getItem('token')
-      console.log(ID)
-      console.log(comment)
       const response = await axios.post('http://localhost:3000/binh-luan', { ID, comment }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -91,10 +89,8 @@ function RecipeDetail() {
           }
         })
         const data = await response.json()
-        console.log(data)
         setRecipe(data[0])
         setComments(data)
-        console.log(comments)
         // Cập nhật state với dữ liệu món ăn
       } catch (error) {
         console.error('Lỗi khi lấy chi tiết món ăn:', error)
@@ -102,7 +98,6 @@ function RecipeDetail() {
     }
     fetchRecipeDetail(ID) // Gọi hàm fetch API
   }, [ID])
-console.log(recipe)
 
   if (!recipe) {
     return <Typography>Loading...</Typography>
@@ -168,7 +163,7 @@ console.log(recipe)
 
       <Divider sx={{ my: 3 }} />
       <Box>
-        <Typography variant="h6">Bình luận (6)</Typography>
+        <Typography variant="h6">Bình luận ({comments.length })</Typography>
         <List>
           {comments.map(item => (
             <ListItem key={item.IDbinhLuan}>
