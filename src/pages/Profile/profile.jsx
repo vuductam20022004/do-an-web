@@ -1,6 +1,6 @@
 
 
-import { Box, Typography, TextField, RadioGroup, Radio, FormControlLabel, Button, Avatar, Paper } from '@mui/material'
+import { Box, Typography, TextField, RadioGroup, Radio, FormControlLabel, Button, Avatar, Paper, Modal } from '@mui/material'
 
 import AppBar from '~/components/AppBar/AppBar'
 import Container from '@mui/material/Container'
@@ -10,20 +10,57 @@ import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
 import { useEffect, useState } from 'react'
 import { Password } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+
 
 
 function ProfilePage() {
   const HEIGHT_AD = '200PX'
 
+
   const [data, setProfile] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleChinhSua = () => {
 
   }
-  const handleDoiMatKhau = () => {
 
+  const handleDoiMatKhau = () => {
+    setShowChangePasswordForm(true) // Show the password change form
   }
+
+  const handlePasswordChangeSubmit = async () => {
+    if (newPassword === confirmPassword) {
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.post('http://localhost:3000/doi-mat-khau', { newPassword, currentPassword }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        if (response.data.success) {
+          alert('Đổi mật khẩu thành công!')
+          setShowChangePasswordForm(false)
+          setCurrentPassword('')
+          setNewPassword('')
+          setConfirmPassword('')
+        } else {
+          setShowChangePasswordForm(true)
+          alert(response.data.message)
+        }
+      } catch (error) {
+        console.error('Đăng ký lỗi:', error)
+        alert('Đổi mật khẩu lỗi')
+      }
+    } else {
+      alert(' New passwords do not match')
+    }
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,6 +162,40 @@ function ProfilePage() {
           </Box>
         </Box>
       </Box>
+
+
+      <Modal open={showChangePasswordForm} onClose={() => setShowChangePasswordForm(false)}>
+        <Paper sx={{ padding: 4, maxWidth: 400, margin: 'auto', mt: 8 }}>
+          <Typography variant="h6" mb={2}>Đổi mật khẩu</Typography>
+          <TextField
+            label="Current Password"
+            type="password"
+            fullWidth
+            sx={{ mb: 2 }}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+          <TextField
+            label="New Password"
+            type="password"
+            fullWidth
+            sx={{ mb: 2 }}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <TextField
+            label="Confirm Password"
+            type="password"
+            fullWidth
+            sx={{ mb: 2 }}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <Button variant="contained" color="primary" fullWidth onClick={handlePasswordChangeSubmit}>
+            Change Password
+          </Button>
+        </Paper>
+      </Modal>
     </Container>
   )
 }

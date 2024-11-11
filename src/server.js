@@ -20,7 +20,7 @@ const dbConfig = {
   password: '123456',
   server: 'localhost', // Địa chỉ SQL Server
   database: 'do-an-web',
-  port: 3306,
+  port: 3307,
   options: {
     trustServerCertificate: true // Chỉ cần khi server là local hoặc không có chứng chỉ SSL
   }
@@ -99,9 +99,10 @@ app.post('/login', async (req, res) => {
       .query(query)
 
     const user = result.recordset[0]
+    // console.log(user)
 
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid username or password' })
+      return res.json({ success: false, message: 'Invalid username or password' })
     }
     const userId = result.recordset[0].ID
     const coreUser = result.recordset[0].core
@@ -372,5 +373,43 @@ app.get('/searchDanhMuc', async (req, res) => {
   } catch (error) {
     console.error('Error searching recipes(DanhMuc):', error)
     res.status(500).json({ success: false, message: 'Server error' })
+  }
+})
+
+
+
+//API đổi mật khẩu
+app.post('/doi-mat-khau', authenticateUerToken, async (req, res) => {
+  try {
+    // Lấy dữ liệu từ body request
+    const { newPassword, currentPassword } = req.body
+    const userId = req.userIdAuthen
+    // Kết nối đến SQL Server
+    await sql.connect()
+
+    // Kiểm tra mật khẩu cũ nhập có đúng hay không
+    const checkPasswordUserQuery = `SELECT * FROM users WHERE ID = ${ userId } and password = @currentPassword `
+    const request = new sql.Request()
+    request.input('currentPassword', sql.NVarChar, currentPassword)
+
+    const result = await request.query(checkPasswordUserQuery)
+
+    if (result.recordset.length == 0) {
+      return res.status(201).json({ success: false, message: 'Password cũ nhập không chính xác' })
+    }
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = `update users set users.password = @newPassword where ID = ${ userId }`
+
+    // Tạo request mới và thêm các input
+    const insertRequest = new sql.Request()
+    insertRequest.input('newPassword', sql.NVarChar, newPassword)
+
+    // Thực hiện câu lệnh update
+    await insertRequest.query(query)
+
+    res.status(201).json({ success: true, message: 'Change Password sucessful' })
+  } catch (error) {
+    console.error('Error during Change password:', error)
+    res.status(500).json({ success: false, message: 'Change Password failed' })
   }
 })

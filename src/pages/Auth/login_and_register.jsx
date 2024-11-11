@@ -78,19 +78,17 @@ function LoginForm({ handleToggle }) {
 
   const handleLogin = async () => {
     try {
-      // console.log(username)
-      // console.log(password)
       const response = await axios.post('http://localhost:3000/login', { username, password })
       if (response.data.success) {
         alert('Login successful')
-        localStorage.setItem('token', response.data.token)
-        //Lưu token vào localStorage của Client
+        localStorage.setItem('token', response.data.token)//Lưu token vào localStorage của Client
         navigate('/board')//Điều hướng
 
       } else {
-        alert('Invalid credentials')
+        alert(response.data.message)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Login error:', error)
       alert('An error occurred during login.')
     }
