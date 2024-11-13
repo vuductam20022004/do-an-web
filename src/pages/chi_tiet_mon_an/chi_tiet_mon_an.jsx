@@ -10,26 +10,23 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Divider,
-  colors
+  Divider
 } from '@mui/material'
 import { AccessTime, Group } from '@mui/icons-material'
 import SaveIcon from '@mui/icons-material/Save'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
-import { red } from '@mui/material/colors'
 
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-
 
 
 function RecipeDetail() {
   const { ID } = useParams()
   const [comment, setComment] = useState('')
   const [comments, setComments] = useState([])
-  const fullNameUser = localStorage.getItem('token')
-  const nameUserJWTDecode = jwtDecode(fullNameUser)
+  const token = localStorage.getItem('token')
+  const nameUserJWTDecode = jwtDecode(token)
 
   const handleAddComment = async () => {
     try {
@@ -41,7 +38,10 @@ function RecipeDetail() {
       })
       if (response.data.success) {
         // alert('Bình luận Thành Công')
-        setComments([...comments, { fullName: nameUserJWTDecode.fullNameUser, comment: comment }])
+        setComments([...comments, { fullName: nameUserJWTDecode.fullNameUser,
+          comment: comment,
+          imageUser:nameUserJWTDecode.avatarUser
+        }])
         setComment('')
 
       } else {
@@ -103,7 +103,6 @@ function RecipeDetail() {
     return <Typography>Loading...</Typography>
   }
 
-  
   return (
     <Box sx={{ p: 2, maxWidth: '600px', margin: '0 auto' }}>
 
@@ -168,7 +167,7 @@ function RecipeDetail() {
           {comments.map(item => (
             <ListItem key={item.IDbinhLuan}>
               <ListItemAvatar>
-                <Avatar alt={item.fullName} />
+                <Avatar alt={item.fullName} src= {item.imageUser ? `../${item.imageUser}` : '' } />
               </ListItemAvatar>
               <ListItemText
                 primary={item.fullName}

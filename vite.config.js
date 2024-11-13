@@ -13,6 +13,11 @@ export default defineConfig({
     alias: [
       { find: '~', replacement: '/src' }
     ]
-  }
+  },
+  // server: {
+  //   host: '0.0.0.0',
+  //   port:3000,
+  //   historyApiFallback: true // Đảm bảo server trả về index.html cho tất cả các route
+  // }
 })
 

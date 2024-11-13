@@ -24,6 +24,8 @@ function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [avatar, setAvatar] = useState(null)
+  // const [selectFileAvatar, setSelectFileAvatar] = useState('')
 
   const handleChinhSua = () => {
 
@@ -32,6 +34,38 @@ function ProfilePage() {
   const handleDoiMatKhau = () => {
     setShowChangePasswordForm(true) // Show the password change form
   }
+
+  const handleAvatarClick = () => {
+    document.getElementById('avatarInput').click()
+  }
+  const handleAvatarChange = async (event) => {
+    console.log('kkkk')
+    const file = await event.target.files[0]
+    if (file) {
+      setAvatar(file)
+      try {
+        const token = localStorage.getItem('token') // Lấy token từ localStorage
+        const formData = new FormData()
+        formData.append('avatar', file)
+        const response = await axios.post('http://localhost:3000/doi-avatar', formData, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        if (response.data.success) {
+          alert(response.data.message)
+          window.location.reload()
+        }
+        else
+        {
+          alert(response.data.message)
+        }
+      } catch (error) {
+        console.error('Error change avatar:', error)
+      }
+    }
+  }
+
 
   const handlePasswordChangeSubmit = async () => {
     if (newPassword === confirmPassword) {
@@ -125,7 +159,16 @@ function ProfilePage() {
             <Box flexGrow={1} p={4}>
               <Paper elevation={3} sx={{ padding: 4, maxWidth: 800, margin: 'auto' }}>
                 <Box display="flex" alignItems="center" mb={4}>
-                  <Avatar sx={{ width: 60, height: 60, mr: 2 }} src='src/image/BackgroundLogin/backGroundLogin.jpg' />
+                  <Avatar sx={{ width: 60, height: 60, mr: 2, cursor:'pointer' }} src= {data.imageUser}
+                    onClick={handleAvatarClick}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="avatarInput"
+                    style={{ display: 'none' }}
+                    onChange={handleAvatarChange}
+                  />
                   <Typography variant="h5">{data.fullName}</Typography>
                   <Box ml={2} p={1} bgcolor="pink" borderRadius={1}>
                     <Typography>{data.core} điểm</Typography>

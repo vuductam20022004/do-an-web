@@ -11,9 +11,7 @@ import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import { useNavigate } from 'react-router-dom'
 
-
-
-const pages = ['Chay', 'Mặn', 'Bánh', 'ok']
+const pages = ['Món chính', 'Món mặn', 'Món chay', 'Món tráng miệng', 'Đồ uống']
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -83,7 +81,7 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 onClick={() => handleMenuItemClick(page)}
-                sx={{ my: 2, color: 'white', display: 'block', bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0') }}
+                sx={{ my: 2, color: 'white', mr:10, display: 'block', bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0') }}
               >
                 {page}
               </Button>

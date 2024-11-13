@@ -2,18 +2,25 @@
 import AppBar from '~/components/AppBar/AppBar'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-import { Grid, Card, CardMedia, CardContent, Typography,Avatar, IconButton } from '@mui/material'
+import { Grid, Card, CardMedia, CardContent, Typography, IconButton } from '@mui/material'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material'
+import AnhQuangCao from '~/components/QuangCao/swiper'
 
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 
 
 import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
 const MonCuaToi = () => {
   const HEIGHT_AD = '200PX'
-
   const [data, setMonAns] = useState([])
+  const [openDialog, setOpenDialog] = useState(false)
+  const [selectedId, setSelectedId] = useState(null)
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,6 +42,31 @@ const MonCuaToi = () => {
     }
     fetchData()
   }, [])
+
+
+  const handleOpenDialog = (id) => {
+    setSelectedId(id)
+    setOpenDialog(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+    setSelectedId(null)
+  }
+
+  //  hàm xử lý xóa món ăn
+  const handleConfirmDelete = async (id) => {
+    try {
+      // const token = localStorage.getItem('token')
+      const response = await axios.post('http://localhost:3000/xoa-mon-cua-toi', { id })
+      if (response.data.success) {
+        handleCloseDialog()
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Lỗi xóa món ăn:', error)
+    }
+  }
 
   return (
     <Container disableGutters maxWidth={false} sx={{ height:'100vh' }}>
@@ -66,9 +98,8 @@ const MonCuaToi = () => {
             height:HEIGHT_AD,
             width:'85%',
             p: '10px 15px'
-            // overflow: 'auto'
           }}>
-            <img style={{ height:HEIGHT_AD, width:'100%', boxSizing:'', padding:'10px 5px' }} src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Image AD" />
+            <AnhQuangCao />
           </Box>
           <Box sx={{
             bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),
@@ -91,6 +122,9 @@ const MonCuaToi = () => {
                       <CardContent>
                         <Typography variant="h6">{item.name}</Typography>
                         <Typography variant="body2" color="textSecondary">{item.moTa}</Typography>
+                        <IconButton size="small" onClick={(event) => { event.preventDefault(); handleOpenDialog(item.ID) }} >
+                          <DeleteIcon />
+                        </IconButton>
                         <IconButton size="small">
                           <BookmarkBorderIcon />
                         </IconButton>
@@ -106,6 +140,22 @@ const MonCuaToi = () => {
           </Box>
         </Box>
       </Box>
+
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xóa món ăn này không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">Hủy</Button>
+          <Button onClick={() => handleConfirmDelete(selectedId)} color="secondary">Xóa</Button>
+        </DialogActions>
+      </Dialog>
+
+
     </Container>
 
   )

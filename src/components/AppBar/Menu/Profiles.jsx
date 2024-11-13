@@ -8,11 +8,12 @@ import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import Logout from '@mui/icons-material/Logout'
-
-
+import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 
 function Recent() {
+  const token = localStorage.getItem('token')
+  const avatarUser = jwtDecode(token)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const navigate = useNavigate()
   const open = Boolean(anchorEl)
@@ -41,7 +42,7 @@ function Recent() {
         >
           <Avatar
             alt="DucTamdev"
-            src="src/image/BackgroundLogin/backGroundLogin.jpg"
+            src= {avatarUser.avatarUser}
             sx={{ width: 36, height: 36 }}/>
         </IconButton>
       </Tooltip>
@@ -55,7 +56,7 @@ function Recent() {
         }}
       >
         <MenuItem onClick = {handleTrangCaNhan} >
-          <Avatar sx={{ width:28, height:28, mr:2 }} /> Profile
+          <Avatar src={jwtDecode(localStorage.getItem('token')).avatarUser} sx={{ width:28, height:28, mr:2 }} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem onClick = {handleLogOut}>

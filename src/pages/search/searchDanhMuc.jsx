@@ -4,6 +4,7 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import { Grid, Card, CardMedia, CardContent, Typography,Avatar, IconButton } from '@mui/material'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import AnhQuangCao from '~/components/QuangCao/swiper'
 
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -89,9 +90,8 @@ const SearchDanhMuc = () => {
             height:HEIGHT_AD,
             width:'85%',
             p: '10px 15px'
-            // overflow: 'auto'
           }}>
-            <img style={{ height:HEIGHT_AD, width:'100%', boxSizing:'', padding:'10px 5px' }} src="https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg" alt="Image AD" />
+            <AnhQuangCao />
           </Box>
           <Box sx={{
             bgcolor: (theme) => ( theme.palette.mode === 'dark'? '#34495e' : '#1976d2'),

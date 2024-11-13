@@ -10,6 +10,9 @@ import { fileURLToPath } from 'url'
 import authenticateUerToken from './pages/Auth/authenticateUserToken.js'
 
 
+// const __filename1 = fileURLToPath(import.meta.url)
+// const __dirname1 = path.dirname(__filename1)
+
 const app = express()
 app.use(cors())
 
@@ -26,6 +29,24 @@ const dbConfig = {
   }
 }
 
+
+
+
+// // Serve static files from 'dist'
+// app.use(express.static(path.join(__dirname1, '..', 'dist')))
+
+// // Route for '/'
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname1, '..', 'dist', 'index.html'))
+// })
+// // Ensure all routes (other than static files) return index.html
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'))
+// })
+
+
+
+
 // Kết nối tới SQL Server
 sql.connect(dbConfig)
   .then(() => {
@@ -39,7 +60,7 @@ sql.connect(dbConfig)
 // Route mẫu
 // const localIP = '192.168.1.53'
 const port = 3000
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log('Server đang chạy trên cổng 3000')
 })
 
@@ -60,17 +81,17 @@ app.get('/board/all', async (req, res) => {
 
 
 // API lấy chi tiết món theo ID
-app.get('/chitietmonan/:id', authenticateUerToken, async (req, res) => {
+app.get('/chitietmonan/:id', async (req, res) => {
   const { id } = req.params// Lấy id từ params URL
   try {
-    // Tạo một truy vấn để lấy chi tiết món ăn từ SQL Server
-    const result = await sql.query`select 
+
+    const result = await sql.query(`select 
 t.ID, [name], moTa, nguyenLieu, step, khauPhan, timeNau, [image], t.core, 
-timePost,binhLuan.ID as IDbinhLuan, binhLuan.userId,danhMuc, idMonAn, comment, users.fullName
+timePost,binhLuan.ID as IDbinhLuan, binhLuan.userId,danhMuc, idMonAn, comment, users.fullName, users.imageUser
 from(
 	select * from monAn
-	where monAn.ID = ${ id }) as t LEFT join binhLuan on t.ID = binhLuan.idMonAn
-	left join users on binhLuan.userId = users.ID `
+	where monAn.ID = ${id}) as t LEFT join binhLuan on t.ID = binhLuan.idMonAn
+	left join users on binhLuan.userId = users.ID `)
 
     if (result.recordset.length > 0) {
       res.json(result.recordset)// Trả về dữ liệu chi tiết món ăn nếu tìm thấy
@@ -107,8 +128,9 @@ app.post('/login', async (req, res) => {
     const userId = result.recordset[0].ID
     const coreUser = result.recordset[0].core
     const fullNameUser = result.recordset[0].fullName
+    const avatarUser = result.recordset[0].imageUser
     //Tạo token
-    const token = jwt.sign({ userId, coreUser, fullNameUser }, secretKey, { expiresIn: '1h' })
+    const token = jwt.sign({ userId, coreUser, fullNameUser, avatarUser }, secretKey, { expiresIn: '1h' })
 
 
     // Send the token and success response
@@ -411,5 +433,87 @@ app.post('/doi-mat-khau', authenticateUerToken, async (req, res) => {
   } catch (error) {
     console.error('Error during Change password:', error)
     res.status(500).json({ success: false, message: 'Change Password failed' })
+  }
+})
+
+//API xóa món của tôi
+app.post('/xoa-mon-cua-toi', async (req, res) => {
+  const { id } = req.body
+  console.log(id)
+  try {
+    await sql.connect()
+    const deleteQuery = `delete from monAn where ID = ${id}`
+
+    const request = new sql.Request()
+    await request.query(deleteQuery)
+    res.status(201).json({ success: true, message: 'Xóa Thành Công' })
+
+
+  } catch (err) {
+    console.error('Lỗi khi xóa món ăn:', err)
+    res.status(500).json({ message: 'Lỗi xóa món ăn' })
+  }
+})
+
+//API đổi avatar
+const __filename1 = fileURLToPath(import.meta.url)
+const __dirname1 = path.dirname(__filename1)
+app.use('/src/image/AvatarUser', express.static(path.join(__dirname1, 'src/image/AvatarUser')))
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'src/image/AvatarUser/') // Đường dẫn thư mục lưu ảnh,/Cấu hình multer để lưu file ảnh vào thư mục "uploads"
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const fileExtension = path.extname(file.originalname)
+    const fileName = `${file.fieldname}-${uniqueSuffix}${fileExtension}`
+    cb(null, fileName)
+  }
+})
+
+const uploadAvatar = multer({ storage: avatarStorage })
+app.post('/doi-avatar', authenticateUerToken, uploadAvatar.single('avatar'), async (req, res) => {
+  try {
+    const userId = req.userIdAuthen
+    // Kết nối đến SQL Server
+    await sql.connect()
+    let imagePath = null
+    if (req.file) {
+      imagePath = `src/image/AvatarUser/${req.file.filename}`//đường dẫn lưu vào db
+    }
+
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = `update users set users.imageUser = @avatar where ID = ${ userId }`
+
+    // Tạo request mới và thêm các input
+    const insertRequest = new sql.Request()
+    insertRequest.input('avatar', sql.NVarChar, imagePath)
+
+    // Thực hiện câu lệnh update
+    await insertRequest.query(query)
+
+    res.status(201).json({ success: true, message: 'Change avatar sucessful' })
+  } catch (error) {
+    console.error('Error during Change avatar:', error)
+    res.status(500).json({ success: false, message: 'Change avatar failed' })
+  }
+})
+
+//API xóa món tôi đã lưu
+app.post('/xoa-mon-da-luu', authenticateUerToken, async (req, res) => {
+  const { id } = req.body
+  const userIdJWT = req.userIdAuthen
+  try {
+    await sql.connect()
+    const deleteQuery = `delete from luuMonAn where idMonAn = ${id} and userId = ${userIdJWT}`
+
+    const request = new sql.Request()
+    await request.query(deleteQuery)
+    res.status(201).json({ success: true, message: 'Xóa món đã lưu Thành Công' })
+
+
+  } catch (err) {
+    console.error('Lỗi khi xóa món ăn đã lưu:', err)
+    res.status(500).json({ message: 'Lỗi xóa món ăn đã lưu' })
   }
 })

@@ -46,7 +46,6 @@ const AddNewRecipe = () => {
   }
 
   const handleSubmit = async (e) => {
-    
     e.preventDefault()
     // Logic xử lý đăng món ăn
     const formData = new FormData()
@@ -60,9 +59,16 @@ const AddNewRecipe = () => {
     formData.append('coreMonAn', recipe.coreMonAn)
 
 
-
     if (selectedFile) {
       formData.append('image', selectedFile) // Gửi hình ảnh nếu có
+    }
+    if (danhMuc == ''||recipe.name==''||recipe.description==''||recipe.portion==''||recipe.cookingTime==''||recipe.ingredients==''||recipe.steps==''||recipe.coreMonAn=='') {
+      alert('vui long nhap du thong tin')
+      return
+    }
+    if (!Number.isInteger(Number(recipe.coreMonAn)) || !Number.isInteger(Number(recipe.cookingTime)) || !Number.isInteger(Number(recipe.portion))) {
+      alert('thong tin khong hop le')
+      return
     }
 
     try {
@@ -102,7 +108,7 @@ const AddNewRecipe = () => {
       cookingTime: '',
       ingredients: '',
       steps: '',
-      coreMonAn:null
+      coreMonAn:''
     }),
     setSelectedFile(null) // Reset file ảnh
     setPreview(null) // Reset ảnh xem trước
@@ -191,9 +197,11 @@ const AddNewRecipe = () => {
                 label="Danh mục"
                 onChange={handleChangeDanhMuc}
               >
-                <MenuItem value='chay'>Chay</MenuItem>
-                <MenuItem value='mặn'>Mặn</MenuItem>
-                <MenuItem value='bánh'>Bánh</MenuItem>
+                <MenuItem value='món chính'>Món chính</MenuItem>
+                <MenuItem value='món mặn'>Món mặn</MenuItem>
+                <MenuItem value='món chay'>Món chay</MenuItem>
+                <MenuItem value='món tráng miệng'>Món tráng miệng</MenuItem>
+                <MenuItem value='đồ uống'>Đồ uống</MenuItem>
               </Select>
             </FormControl>
 
