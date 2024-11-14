@@ -167,26 +167,34 @@ function RecipeDetail() {
 
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6">Các nguyên liệu:</Typography>
-        <Typography variant="">{recipe.nguyenLieu}</Typography>
-        {/* <List>
-          <ListItem>
-            <ListItemText primary="1. Nguyên liệu 1" />
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="2. Nguyên liệu 2" />
-          </ListItem>
-        </List> */}
+        <TextField
+          fullWidth
+          label=""
+          name="steps"
+          value={recipe.nguyenLieu}
+          variant="outlined"
+          multiline
+          rows={4}
+          InputProps={{
+            readOnly: true
+          }}
+        />
       </Box>
 
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6">Các bước làm</Typography>
-        <Typography paragraph>
-          {recipe.step}
-        </Typography>
-        {/* <Typography paragraph>
-          Bước 2: Mô tả chi tiết các bước tiếp theo.
-        </Typography> */}
-        {/* Add more steps here */}
+        <TextField
+          fullWidth
+          label=""
+          name="steps"
+          value={recipe.step}
+          variant="outlined"
+          multiline
+          rows={4}
+          InputProps={{
+            readOnly: true
+          }}
+        />
       </Box>
 
       <Divider sx={{ my: 3 }} />

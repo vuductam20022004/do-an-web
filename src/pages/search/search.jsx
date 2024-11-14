@@ -15,13 +15,17 @@ const Search = () => {
   const HEIGHT_AD = '200PX'
   const queryParams = new URLSearchParams(location.search)
   const searchValue = queryParams.get('query')
-  
   const [data, setSearchResults] = useState([])
+  const token = localStorage.getItem('token')
   useEffect(() => {
     if (searchValue) {
       const fetchSearchResults = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/search?q=${searchValue}`)
+          const response = await fetch(`http://localhost:3000/search?q=${searchValue}`, {
+            headers:{
+              Authorization: `Bearer ${token}`
+            }
+          })
           const data = await response.json()
           setSearchResults(data)
         } catch (error) {
@@ -120,7 +124,7 @@ const Search = () => {
                           <BookmarkBorderIcon />
                         </IconButton>
                         <Typography variant="body2" color="textSecondary">
-                          {item.userId} Tác giả
+                        Tác giả: {item.fullName}
                         </Typography>
                       </CardContent>
                     </Card>

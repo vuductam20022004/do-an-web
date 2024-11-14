@@ -72,7 +72,13 @@ app.get('/board/all', authenticateUerToken, async (req, res) => {
   try {
     const coreUser = req.userCoreAuthen
     const pool = await sql.connect(dbConfig)
-    const result = await pool.request().query(`SELECT * FROM monAn where monAn.core <= ${coreUser}`)
+    const result = await pool.request()
+      .query(`SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+          FROM monAn
+          left join users on monAn.userId = users.ID
+          where monAn.core <= ${coreUser}`)
     res.json(result.recordset) // Trả về kết quả
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
@@ -298,9 +304,10 @@ app.get('/mon-da-luu', authenticateUerToken, async (req, res) => {
     const userId = req.userIdAuthen
 
     const pool = await sql.connect(dbConfig)
-    const result = await pool.request().query(`select luuMonAn.userId, ID, [name], moTa, nguyenLieu, step,khauPhan,timeNau,[image],core from luuMonAn 
-join monAn on luuMonAn.idMonAn = monAn.ID
-where luuMonAn.userId = ${userId}`)
+    const result = await pool.request().query(`
+      select luuMonAn.userId, monAn.ID, [name], moTa, nguyenLieu, step,khauPhan,timeNau,[image],monAn.core,users.fullName from luuMonAn 
+      join monAn on luuMonAn.idMonAn = monAn.ID  join users on monAn.userId = users.ID
+	  where luuMonAn.userId = ${userId}`)
     res.json(result.recordset) // Trả về kết quả
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
@@ -326,17 +333,19 @@ app.get('/trang-ca-nhan', authenticateUerToken, async (req, res) => {
 
 
 //API TÌM KIẾM
-app.get('/search', async (req, res) => {
+app.get('/search', authenticateUerToken, async (req, res) => {
   const searchValue = req.query.q //Lấy từ URL
-
+  const coreUser = req.userCoreAuthen
   try {
     const pool = await sql.connect()
     const query = `
-      SELECT * FROM monAn 
-      WHERE name LIKE '%' + @searchValue + '%' 
-      OR moTa LIKE '%' + @searchValue + '%'
-    `
-
+    SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+          FROM monAn
+          join users on monAn.userId = users.ID
+      WHERE (name LIKE '%' + @searchValue + '%' 
+      OR moTa LIKE '%' + @searchValue + '%') and monAn.core <= ${coreUser} `
     const result = await pool.request()
       .input('searchValue', sql.NVarChar, searchValue)
       .query(query)
@@ -381,11 +390,16 @@ app.post('/binh-luan', authenticateUerToken, async (req, res) => {
 })
 
 //API lọc món ăn theo danh mục
-app.get('/searchDanhMuc', async (req, res) => {
+app.get('/searchDanhMuc', authenticateUerToken, async (req, res) => {
   const searchValue = req.query.q //Lấy từ URL
+  const coreUser = req.userCoreAuthen
   try {
     const pool = await sql.connect()
-    const query = 'select * from monAn where danhMuc = @searchValue'
+    const query = `SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+	  FROM monAn left join users on monAn.userId = users.ID
+where danhMuc = @searchValue and monAn.core <= ${coreUser}`
 
     const result = await pool.request()
       .input('searchValue', sql.NVarChar, searchValue )

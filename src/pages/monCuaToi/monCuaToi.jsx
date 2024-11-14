@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react'
 
 
 import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
+import { jwtDecode } from 'jwt-decode'
 const MonCuaToi = () => {
   const HEIGHT_AD = '200PX'
   const [data, setMonAns] = useState([])
@@ -129,7 +130,7 @@ const MonCuaToi = () => {
                           <BookmarkBorderIcon />
                         </IconButton>
                         <Typography variant="body2" color="textSecondary">
-                          {item.userId} Tác giả
+                          Tác giả: {jwtDecode(localStorage.getItem('token')).fullNameUser}
                         </Typography>
                       </CardContent>
                     </Card>

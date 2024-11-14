@@ -137,7 +137,7 @@ function MonDaLuu() {
                           <BookmarkBorderIcon />
                         </IconButton>
                         <Typography variant="body2" color="textSecondary">
-                          {item.userId} Tác giả
+                        Tác giả: {item.fullName}
                         </Typography>
                       </CardContent>
                     </Card>
