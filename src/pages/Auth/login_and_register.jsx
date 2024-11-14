@@ -15,6 +15,8 @@ import {
 
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { Flip, toast } from 'react-toastify'
+
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true) // State to toggle between login and register
@@ -80,12 +82,30 @@ function LoginForm({ handleToggle }) {
     try {
       const response = await axios.post('http://localhost:3000/login', { username, password })
       if (response.data.success) {
-        alert('Login successful')
+        toast.success('Đăng nhập thành công!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme:'colored',
+          progress: undefined
+        })
         localStorage.setItem('token', response.data.token)//Lưu token vào localStorage của Client
         navigate('/board', { replace: true })//Điều hướng
 
       } else {
-        alert(response.data.message)
+        toast.error(response.data.message, {
+          position: 'top-center',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
       }
     }
     catch (error) {
@@ -154,10 +174,28 @@ function RegisterForm({ handleToggle }) {
         gender
       })
       if (response.data.success) {
-        alert('Đăng ký thành công!')
+        toast.success(response.data.message, {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
         handleToggle()// Chuyển về trang đăng nhập
       } else {
-        alert(response.data.message)
+        toast.error(response.data.message, {
+          position: 'top-right',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
       }
     } catch (error) {
       console.error('Đăng ký lỗi:', error)

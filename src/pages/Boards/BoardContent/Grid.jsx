@@ -1,89 +1,33 @@
-import { Grid, Card, CardMedia, CardContent, Typography,Avatar, IconButton } from '@mui/material'
+import { Grid, Card, CardMedia, CardContent, Typography, IconButton } from '@mui/material'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 
 
 import { Link } from 'react-router-dom'
-import styled from '@emotion/styled'
-import { Style } from '@mui/icons-material'
-
 import { useState, useEffect } from 'react'
+import { jwtDecode } from 'jwt-decode'
+import axios from 'axios'
 
-
-
-// const data = [
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm Mật Ong',
-//     author: 'Emily Luu',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 1
-//   },
-//   {
-//     title: 'Cánh gà chiên mắm',
-//     author: 'Phạm Minh Trang',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 1
-//   },
-//   {
-//     title: 'Cánh gà chiên nước mắm',
-//     author: 'Phuoc Le',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 4
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   },
-//   {
-//     title: 'Cánh Gà Chiên Nước Mắm',
-//     author: 'Bòn Bon',
-//     image: 'https://img.thuthuattinhoc.vn/uploads/2019/10/26/hinh-anh-que-huong-con-song-uon-quanh_055458566.jpg',
-//     cooksnap: 3
-//   }
-// ]
 
 const RecipeGrid = () => {
   const [data, setMonAns] = useState([])
+  const token = localStorage.getItem('token')
   useEffect(() => {
-    fetch('http://localhost:3000/board/all')
-      .then(response => response.json())
-      .then(data => {
-        setMonAns(data)// Giả sử bạn đã định nghĩa setUsers để lưu dữ liệu
-      })
-      .catch(error => console.error('Error:', error))
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/board/all', {
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        const data = await response.json()
+        setMonAns(data)
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+    fetchData()
   }, [])
-  
+
   return (
     <Grid container spacing={2}>
       {data.map(item => (

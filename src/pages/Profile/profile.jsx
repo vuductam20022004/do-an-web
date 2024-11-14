@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { Password } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { Flip, toast } from 'react-toastify'
 
 
 
@@ -39,7 +40,6 @@ function ProfilePage() {
     document.getElementById('avatarInput').click()
   }
   const handleAvatarChange = async (event) => {
-    console.log('kkkk')
     const file = await event.target.files[0]
     if (file) {
       setAvatar(file)
@@ -53,12 +53,20 @@ function ProfilePage() {
           }
         })
         if (response.data.success) {
-          alert(response.data.message)
           window.location.reload()
         }
         else
         {
-          alert(response.data.message)
+          toast.error(response.data.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme:'colored',
+            progress: undefined
+          })
         }
       } catch (error) {
         console.error('Error change avatar:', error)
@@ -77,21 +85,48 @@ function ProfilePage() {
           }
         })
         if (response.data.success) {
-          alert('Đổi mật khẩu thành công!')
+          toast.success(response.data.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme:'colored',
+            progress: undefined
+          })
           setShowChangePasswordForm(false)
           setCurrentPassword('')
           setNewPassword('')
           setConfirmPassword('')
         } else {
           setShowChangePasswordForm(true)
-          alert(response.data.message)
+          toast.error(response.data.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme:'colored',
+            progress: undefined
+          })
         }
       } catch (error) {
         console.error('Đăng ký lỗi:', error)
         alert('Đổi mật khẩu lỗi')
       }
     } else {
-      alert(' New passwords do not match')
+      toast.error('Mật khẩu mới nhập không khớp', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme:'colored',
+        progress: undefined
+      })
     }
   }
 

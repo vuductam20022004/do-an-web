@@ -68,17 +68,17 @@ app.listen(port, '0.0.0.0', () => {
 app.use(express.json()) // Để xử lý JSON từ request body
 
 // Route: Lấy danh sách tất cả mon an
-app.get('/board/all', async (req, res) => {
+app.get('/board/all', authenticateUerToken, async (req, res) => {
   try {
+    const coreUser = req.userCoreAuthen
     const pool = await sql.connect(dbConfig)
-    const result = await pool.request().query('SELECT * FROM monAn')
+    const result = await pool.request().query(`SELECT * FROM monAn where monAn.core <= ${coreUser}`)
     res.json(result.recordset) // Trả về kết quả
   } catch (err) {
     console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
     res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
   }
 })
-
 
 // API lấy chi tiết món theo ID
 app.get('/chitietmonan/:id', async (req, res) => {
@@ -161,12 +161,12 @@ app.post('/register', async (req, res) => {
     const result = await request.query(checkUserQuery)
 
     if (result.recordset.length > 0) {
-      return res.status(201).json({ success: false, message: 'Username already exists' })
+      return res.status(201).json({ success: false, message: 'Username đã tồn tại' })
     }
     // Thực hiện câu lệnh SQL để lưu người dùng vào database
     const query = `
-      INSERT INTO Users (fullName, username, birthYear, password, email, gender)
-      VALUES (@fullName, @username, @birthYear, @password, @email, @gender)
+      INSERT INTO Users (fullName, username, birthYear, password, email, gender ,core)
+      VALUES (@fullName, @username, @birthYear, @password, @email, @gender ,100)
     `
 
     // Tạo request mới và thêm các input
@@ -181,7 +181,7 @@ app.post('/register', async (req, res) => {
     // Thực hiện câu lệnh insert
     await insertRequest.query(query)
 
-    res.status(201).json({ success: true, message: 'User registered successfully' })
+    res.status(201).json({ success: true, message: 'Đăng kí thành công!' })
   } catch (error) {
     console.error('Error during registration:', error)
     res.status(500).json({ success: false, message: 'Registration failed' })
@@ -429,7 +429,7 @@ app.post('/doi-mat-khau', authenticateUerToken, async (req, res) => {
     // Thực hiện câu lệnh update
     await insertRequest.query(query)
 
-    res.status(201).json({ success: true, message: 'Change Password sucessful' })
+    res.status(201).json({ success: true, message: 'Thay đổi Password sucessful' })
   } catch (error) {
     console.error('Error during Change password:', error)
     res.status(500).json({ success: false, message: 'Change Password failed' })
@@ -492,7 +492,7 @@ app.post('/doi-avatar', authenticateUerToken, uploadAvatar.single('avatar'), asy
     // Thực hiện câu lệnh update
     await insertRequest.query(query)
 
-    res.status(201).json({ success: true, message: 'Change avatar sucessful' })
+    res.status(201).json({ success: true, message: 'Thay đổi avatar sucessful' })
   } catch (error) {
     console.error('Error during Change avatar:', error)
     res.status(500).json({ success: false, message: 'Change avatar failed' })

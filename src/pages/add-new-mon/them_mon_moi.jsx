@@ -17,11 +17,13 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import AppBar from '~/components/AppBar/AppBar'
 import SideBar from '~/pages/Boards/BoardContent/SideBars/SideBar'
+import { Flip, toast } from 'react-toastify'
 
 
 import { useNavigate } from 'react-router-dom'
 
 import { useEffect } from 'react'
+import { jwtDecode } from 'jwt-decode'
 
 
 const AddNewRecipe = () => {
@@ -63,11 +65,42 @@ const AddNewRecipe = () => {
       formData.append('image', selectedFile) // Gửi hình ảnh nếu có
     }
     if (danhMuc == ''||recipe.name==''||recipe.description==''||recipe.portion==''||recipe.cookingTime==''||recipe.ingredients==''||recipe.steps==''||recipe.coreMonAn=='') {
-      alert('vui long nhap du thong tin')
+      toast.error('Vui lòng nhập đủ thông tin ', {
+        position: 'top-center',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        transition: Flip
+      })
       return
     }
     if (!Number.isInteger(Number(recipe.coreMonAn)) || !Number.isInteger(Number(recipe.cookingTime)) || !Number.isInteger(Number(recipe.portion))) {
-      alert('thong tin khong hop le')
+      toast.error('Thông tin không hợp lệ,kiểm tra lại ', {
+        position: 'top-center',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        transition: Flip
+      })
+      return
+    }
+    if (Number(recipe.coreMonAn) >= jwtDecode(localStorage.getItem('token')).coreUser) {
+      toast.error('Không thể cho điểm của bài đăng lớn hơn hoặc bằng điểm cá nhân mình :(', {
+        position: 'top-center',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        transition: Flip
+      })
       return
     }
 
@@ -87,6 +120,16 @@ const AddNewRecipe = () => {
       }
 
       const data = await response.json()
+      toast.success('Thành công', {
+        position: 'top-right',
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'colored',
+        transition: Flip
+      })
       console.log('Món ăn đã được thêm thành công:', data)
       navigate('/board')
 

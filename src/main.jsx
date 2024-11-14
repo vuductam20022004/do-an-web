@@ -21,6 +21,8 @@ import MonDaLuu from '~/pages/monDaLuu/monDaLuu.jsx'
 import ProfilePage from '~/pages/Profile/profile.jsx'
 import Search from '~/pages/search/search.jsx'
 import SearchDanhMuc from './pages/search/searchDanhMuc.jsx'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -44,6 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
         </Routes>
       </Router>
+      <ToastContainer />
       {/* <App /> */}
 
     </CssVarsProvider>

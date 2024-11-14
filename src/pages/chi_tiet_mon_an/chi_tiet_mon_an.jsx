@@ -16,6 +16,8 @@ import { AccessTime, Group } from '@mui/icons-material'
 import SaveIcon from '@mui/icons-material/Save'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { Flip, toast } from 'react-toastify'
+
 
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
@@ -66,13 +68,40 @@ function RecipeDetail() {
         }
       })
       if (response.data.success) {
-        alert('Lưu Thành Công')
+        toast.success(response.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme:'colored',
+          progress: undefined
+        })
       } else {
-        alert(response.data.message)
+        toast.error(response.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme:'colored',
+          progress: undefined
+        })
       }
     } catch (error) {
       console.error('Đăng ký lỗi:', error)
-      alert('Món này đã được lưu trước kia')
+      toast.error('Món ăn đã được lưu trước kia!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme:'colored',
+        progress: undefined
+      })
     }
   }
 
