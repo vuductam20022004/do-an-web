@@ -531,3 +531,261 @@ app.post('/xoa-mon-da-luu', authenticateUerToken, async (req, res) => {
     res.status(500).json({ message: 'Lỗi xóa món ăn đã lưu' })
   }
 })
+
+
+
+
+
+
+// Xư lí tất cả các API của admin
+// Route: Lấy danh sách tất cả mon an(admin)
+app.get('/board-admin', async (req, res) => {
+  try {
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request()
+      .query(`SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+          FROM monAn
+          left join users on monAn.userId = users.ID`)
+    res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+// API lấy chi tiết món theo ID(admin)
+app.get('/chitietmonan-admin/:id', async (req, res) => {
+  const { id } = req.params// Lấy id từ params URL
+  try {
+    // Tạo một truy vấn để lấy chi tiết món ăn từ SQL Server
+    const result = await sql.query`select 
+t.ID, [name], moTa, nguyenLieu, step, khauPhan, timeNau, [image], t.core, 
+timePost,binhLuan.ID as IDbinhLuan, binhLuan.userId,danhMuc, idMonAn, comment, users.fullName, users.imageUser
+from(
+	select * from monAn
+	where monAn.ID = ${ id }) as t LEFT join binhLuan on t.ID = binhLuan.idMonAn
+	left join users on binhLuan.userId = users.ID `
+
+    if (result.recordset.length > 0) {
+      res.json(result.recordset)// Trả về dữ liệu chi tiết món ăn nếu tìm thấy
+    } else {
+      res.status(404).json({ message: 'Món ăn không tồn tại' })
+    }
+  } catch (err) {
+    console.error('Lỗi khi truy vấn:', err)
+    res.status(500).json({ message: 'Lỗi máy chủ' })
+  }
+})
+
+//API xóa bài viết admin
+
+app.post('/xoa-bai-viet-admin', async (req, res) => {
+  try {
+    const idMonAn = req.body.ID
+    // const userId = req.userIdAuthen
+    // Kết nối đến SQL Server
+    await sql.connect()
+    // Thực hiện câu lệnh SQL để lưu người dùng vào database
+    const query = 'delete from monAn where ID = @idMonAn'
+
+    // Tạo request mới và thêm các input
+    const Request = new sql.Request()
+    Request.input('idMonAn', sql.Int, idMonAn)
+
+    // Thực hiện câu lệnh insert
+    await Request.query(query)
+
+    res.status(201).json({ success: true, message: 'Xóa món thành công' })
+  } catch (error) {
+    console.error('Error during Lưu món:', error)
+    res.status(500).json({ success: false, message: 'Lỗi trong quá trình xóa món' })
+  }
+})
+
+//API đăng nhập admin
+
+app.post('/login-admin', async (req, res) => {
+  const { username, password } = req.body
+
+  try {
+    // Create a SQL query to find the user by username and password (plaintext)
+    const query = 'SELECT * FROM admins WHERE username = @username AND password = @password'
+    const pool = await sql.connect()
+    const result = await pool.request()
+      .input('username', sql.VarChar, username)
+      .input('password', sql.VarChar, password)
+      .query(query)
+
+    const user = result.recordset[0]
+
+    if (!user) {
+      return res.status(201).json({ success: false, message: 'Invalid username or password' })
+    }
+    const adminId = result.recordset[0].ID
+    const coreAdmin = result.recordset[0].core
+    const fullNameAdmin = result.recordset[0].fullName
+    //Tạo token
+    const token = jwt.sign({ adminId, coreAdmin, fullNameAdmin }, secretKey, { expiresIn: '1h' })
+
+    // Send the token and success response
+    res.json({ success: true, token })
+
+  } catch (error) {
+    console.error('Error during login:', error)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+})
+
+
+//API XEm TẤT CẢ CÁC MÓN CỦA TÔI trong profile user
+app.post('/mon-cua-toi-admin', async (req, res) => {
+  try {
+    const ID = req.body.ID
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request()
+      .query(`SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+          FROM monAn
+          join users on monAn.userId = users.ID
+		  where userId = ${ID}`)
+    res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+//API admin lấy profile của user
+app.post('/profile-user-admin', async (req, res) => {
+  try {
+    const ID = req.body.ID
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request().query(`select * from users where users.ID = ${ID}`)
+
+    res.json(result.recordset[0]) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+
+//API LẤY TẤT CẢ USERS
+
+app.get('/lay-user-admin', async (req, res) => {
+  try {
+    const pool = await sql.connect(dbConfig)
+    const result = await pool.request().query('select * from users')
+    res.json(result.recordset) // Trả về kết quả
+  } catch (err) {
+    console.error('Lỗi khi lấy dữ liệu:', err) // Log lỗi ra console để kiểm tra
+    res.status(500).send('Lỗi khi lấy dữ liệu') // Trả về lỗi cho client
+  }
+})
+
+//API tìm kiếm ADMIN
+
+app.get('/search2-admin', async (req, res) => {
+  const searchValue = req.query.q //Lấy từ URL
+  try {
+    const pool = await sql.connect()
+    const query = `
+      SELECT * FROM monAn 
+      WHERE name LIKE '%' + @searchValue + '%' 
+      OR moTa LIKE '%' + @searchValue + '%'
+    `
+
+    const result = await pool.request()
+      .input('searchValue', sql.NVarChar, searchValue)
+      .query(query)
+
+    res.json(result.recordset)
+  } catch (error) {
+    console.error('Error searching recipes:', error)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+})
+
+// API xóa tài khoản user(admin)
+
+app.post('/xoa-tai-khoan-admin', async (req, res) => {
+  try {
+    const id = req.body.ID
+    await sql.connect()
+    const query = 'delete from users where ID = @id'
+
+    // Tạo request mới và thêm các input
+    const Request = new sql.Request()
+    Request.input('id', sql.Int, id)
+    await Request.query(query)
+    res.status(201).json({ success: true, message: 'Xóa tài khoản thành công' })
+  } catch (error) {
+    console.error('Error during xóa tài khoản:', error)
+    res.status(500).json({ success: false, message: 'Lỗi trong quá trình xóa user' })
+  }
+})
+
+//API xóa comment
+app.post('/xoa-comment-admin', async (req, res) => {
+  try {
+    const IDbinhLuan = req.body.IDbinhLuan
+    // Kết nối đến SQL Server
+    await sql.connect()
+    const query = 'delete from binhLuan where ID = @IDbinhLuan'
+    const Request = new sql.Request()
+    Request.input('IDbinhLuan', sql.Int, IDbinhLuan)
+    await Request.query(query)
+    res.status(201).json({ success: true, message: 'Xóa comment thành công' })
+  } catch (error) {
+    console.error('Error during xoa comment:', error)
+    res.status(500).json({ success: false, message: 'Lỗi trong quá trình xóa comment' })
+  }
+})
+
+
+//API Tìm kiếm USER (admin)
+app.get('/search-users-admin', async (req, res) => {
+  const searchValue = req.query.q //Lấy từ URL
+  try {
+    const pool = await sql.connect()
+    const query = `
+      SELECT * FROM users 
+      WHERE fullName LIKE '%' + @searchValue + '%' 
+      OR username LIKE '%' + @searchValue + '%'
+    `
+
+    const result = await pool.request()
+      .input('searchValue', sql.NVarChar, searchValue)
+      .query(query)
+
+    res.json(result.recordset)
+  } catch (error) {
+    console.error('Error searching recipes:', error)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+})
+
+//API search Danh muc Admin
+app.get('/searchDanhMuc-admin', async (req, res) => {
+  const searchValue = req.query.q //Lấy từ URL
+  try {
+    const pool = await sql.connect()
+    const query = `SELECT monAn.ID, monAn.[name], monAn.moTa, monAn.nguyenLieu,monAn.step,
+          monAn.khauPhan,monAn.timeNau,monAn.[image], monAn.core, monAn.timePost,
+          monAn.userId,monAn.danhMuc,users.fullName
+	  FROM monAn left join users on monAn.userId = users.ID
+where danhMuc = @searchValue`
+
+    const result = await pool.request()
+      .input('searchValue', sql.NVarChar, searchValue )
+      .query(query)
+
+    res.json(result.recordset)
+  } catch (error) {
+    console.error('Error searching recipes(DanhMuc):', error)
+    res.status(500).json({ success: false, message: 'Server error' })
+  }
+})

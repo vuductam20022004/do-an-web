@@ -32,11 +32,6 @@ function AuthPage() {
       xs={12}
       md={6}
       sx={{
-        // display: 'flex',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // bgcolor: '#fce4ec',
-        // height:'100vh'
         minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
@@ -165,6 +160,45 @@ function RegisterForm({ handleToggle }) {
 
   const handleRegister = async () => {
     try {
+      if (fullName == '' || username =='' ||birthYear == ''||password ==''||email=='') {
+        toast.error('Vui lòng nhập đủ thông tin ', {
+          position: 'top-center',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
+        return
+      }
+      if (!Number.isInteger(Number(birthYear))) {
+        toast.error('Năm sinh không hợp lệ ', {
+          position: 'top-center',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
+        return
+      }
+      if (password.length <= 5) {
+        toast.error('Mật khẩu > 5 kí tự ', {
+          position: 'top-center',
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          theme: 'colored',
+          transition: Flip
+        })
+        return
+      }
       const response = await axios.post('http://localhost:3000/register', {
         fullName,
         username,

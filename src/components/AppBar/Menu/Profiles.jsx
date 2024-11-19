@@ -27,7 +27,7 @@ function Recent() {
     navigate('/trang-ca-nhan')
   }
   const handleLogOut = () => {
-    navigate('/')
+    navigate('/', { replace: true })
   }
   return (
     <Box>
